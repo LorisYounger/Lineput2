@@ -1,0 +1,77 @@
+﻿<Window x:Class="LineputPlus.Lineputxaml"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LineputPlus"
+        mc:Ignorable="d"
+        Title="Lineput" Height="500" Width="750" Icon="Lineput.ico">
+    <Grid Background="#FF333333">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="45"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Row="1" Grid.Column="0" Width="5" VerticalAlignment="Stretch" HorizontalAlignment="Right"/>
+        <Viewbox Grid.Column="0" Margin="1,1,5,1" >
+            <StackPanel>
+                <Button x:Name="ButtonFontColor" Width="24" Background="Snow" Click="ButtonFontColor_Click">
+                    <Image Source="Resources/ic_format_color_text_black_24dp.png" />
+                </Button>
+                <Button x:Name="ButtonBackColor" Width="24" Background="Snow" Click="ButtonBackColor_Click">
+                    <Image Source="Resources/ic_format_color_fill_black_24dp.png" />
+                </Button>
+                <WrapPanel Width="24" Margin="0,1,0,3">
+                    <Border x:Name="BorderDisplayColor" Width="22" Height="10" Background="White" Margin="1">
+                        <Border.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="4"/>
+                            </Style>
+                        </Border.Resources>
+                    </Border>
+                    <Button x:Name="ButtonRed" Width="12" Background="Red" Height="10" Click="ButtonColorChoose_Click"/>
+                    <Button x:Name="ButtonLime" Width="12" Background="Lime" Height="10" Click="ButtonColorChoose_Click"/>
+                    <Button x:Name="ButtonBlue" Width="12" Background="Blue" Height="10" Click="ButtonColorChoose_Click"/>
+                    <Button x:Name="ButtonOrange" Width="12" Background="Orange" Height="10" Click="ButtonColorChoose_Click"/>
+                    <Button x:Name="ButtonWhite" Width="12" Background="White" Height="10" Click="ButtonColorChoose_Click"/>
+                    <Button x:Name="ButtonBlack" Width="12" Background="Black" Height="10" Click="ButtonColorChoose_Click"/>
+                </WrapPanel>
+                <Button x:Name="ButtonB" Width="24" Background="Snow" Click="ButtonB_Click">
+                    <Image Source="Resources/ic_format_bold_black_24dp.png" />
+                </Button>
+                <Button x:Name="ButtonI" Width="24" Background="Snow" Click="ButtonI_Click">
+                    <Image Source="Resources/ic_format_italic_black_24dp.png" />
+                </Button>
+                <Button x:Name="ButtonSizeBig" Width="24" Background="Snow" Click="ButtonSizeBig_Click" >
+                    <Image Source="Resources/ic_format_size_black_24dp.png" />
+                </Button>
+                <Button x:Name="ButtonSizeSmall" Width="24" Background="Snow" Click="ButtonSizeSmall_Click">
+                    <Image Source="Resources/ic_format_sizesmall_black_24dp.png" />
+                </Button>
+                <Button x:Name="ButtonU" Width="24" Background="Snow" Click="ButtonU_Click">
+                    <Image Source="Resources/ic_format_underline_black_24dp.png" />
+                </Button>
+                <Button x:Name="ButtonT" Width="24" Background="Snow" Click="ButtonT_Click">
+                    <Image Source="Resources/ic_format_strikethrough_black_24dp.png" />
+                </Button>
+                <Button x:Name="ButtonBack" Width="24" Background="Snow">
+                    <Image Source="Resources/ic_replay_black_24dp.png" />
+                </Button>
+                <Button x:Name="ButtonNext" Width="24" Background="Snow">
+                    <Image Source="Resources/ic_play_arrow_black_24dp.png" />
+                </Button>
+                <Button x:Name="ButtonNextCls" Width="24" Background="Snow">
+                    <Image Source="Resources/ic_skip_next_black_24dp.png" />
+                </Button>
+            </StackPanel>
+        </Viewbox>
+        <Viewbox Grid.Column="1">
+            <RichTextBox x:Name="TextBox1" Background="#FF444444" Foreground="White" Width="600" Height="400" >
+                <FlowDocument>
+                    <Paragraph>
+                        <Run Text="欢迎使用Lineput 当前版本"/>
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+        </Viewbox>
+    </Grid>
+</Window>

@@ -1,0 +1,42 @@
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\bin\Debug\LineputPlus.exe.config
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\bin\Debug\LineputPlus.exe
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\bin\Debug\LineputPlus.pdb
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\LineputPlus.csprojAssemblyReference.cache
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\MainWindow.g.cs
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\App.g.cs
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\LineputPlus_MarkupCompile.cache
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\LineputPlus_MarkupCompile.lref
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\MainWindow.baml
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\LineputPlus.g.resources
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\LineputPlus.Properties.Resources.resources
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\LineputPlus.csproj.GenerateResource.cache
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\LineputPlus.csproj.CoreCompileInputs.cache
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\LineputPlus.exe
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\LineputPlus.pdb
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\bin\Debug\LinePutScript.dll
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\bin\Debug\LinePutScript.pdb
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\bin\Debug\LinePutScript.xml
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\LineputPlus.csproj.CopyComplete
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\Lineput.g.cs
+C:\Users\Zou Jin\Documents\Visual Studio 2017\Projects\LineputPlus\LineputPlus\obj\Debug\Lineput.baml
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\bin\Debug\LineputPlus.exe.config
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\bin\Debug\LineputPlus.exe
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\bin\Debug\LineputPlus.pdb
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\bin\Debug\LinePutScript.dll
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\bin\Debug\LinePutScript.pdb
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\bin\Debug\LinePutScript.xml
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\LineputPlus.csprojAssemblyReference.cache
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\Lineput.g.cs
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\MainWindow.g.cs
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\App.g.cs
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\LineputPlus_MarkupCompile.cache
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\LineputPlus_MarkupCompile.lref
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\Lineput.baml
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\MainWindow.baml
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\LineputPlus.g.resources
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\LineputPlus.Properties.Resources.resources
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\LineputPlus.csproj.GenerateResource.cache
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\LineputPlus.csproj.CoreCompileInputs.cache
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\LineputPlus.csproj.CopyComplete
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\LineputPlus.exe
+C:\Users\ZOUJI\Documents\Visual Studio 2019\Project\LineputPlus\LineputPlus\obj\Debug\LineputPlus.pdb

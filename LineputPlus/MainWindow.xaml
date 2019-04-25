@@ -1,0 +1,222 @@
+﻿<Window x:Class="LineputPlus.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LineputPlus"
+        mc:Ignorable="d"
+        Title="Lineput" Height="600" Width="800" WindowStartupLocation="CenterScreen" Icon="Lineput.ico" MinHeight="500" MinWidth="600">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="ToolBarHeight" Height="110"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1" Grid.Column="0" Margin="0,0,0,0" Background="#FFCDCDCD">
+            <Viewbox VerticalAlignment="Top">
+                <StackPanel x:Name="LeftPanel" Width="150" Height="500">
+                    <!--<Button Margin="5,5,9,5" Background="#FFEEEEEE">
+                        <TextBlock>
+                                <Image Height="80" Width="120"/>
+                            <LineBreak/>
+                                <Label Content="空页面" Margin="13,0,0,0"/>
+                        </TextBlock>
+                    </Button>-->
+                </StackPanel>
+            </Viewbox>
+        </Grid>
+        <Grid x:Name="GridSecond" Grid.Row="1" Grid.Column="1" Margin="0,0,0,0">
+            <Grid.Background>
+                <SolidColorBrush Color="#FFDDDDDD"/>
+            </Grid.Background>
+
+            <Viewbox>
+                <RichTextBox x:Name="TextBox1" Margin="2" Background="#FF444444" VerticalScrollBarVisibility="Auto" Width="600" Height="400">
+                    <FlowDocument>
+                        <Paragraph>
+                            <Run Text="/欢迎使用LinePut" Foreground="White"/>
+                        </Paragraph>
+                    </FlowDocument>
+                </RichTextBox>
+            </Viewbox>
+
+        </Grid>
+        <GridSplitter Grid.Row="1" Grid.Column="0" Width="5" VerticalAlignment="Stretch" HorizontalAlignment="Right"/>
+
+        <TabControl Grid.Row="0" Grid.Column="0" x:Name="ToolBar" VerticalAlignment="Top" FontSize="16" ScrollViewer.CanContentScroll="True" MouseDoubleClick="TabControl_MouseDoubleClick" MouseLeave="ToolBar_MouseLeave" MouseEnter="ToolBar_MouseEnter" Background="SkyBlue" Grid.ColumnSpan="2">
+            <TabItem Header=" 文件 ">
+                <Grid Background="WhiteSmoke" ScrollViewer.CanContentScroll="True" Height="78">
+                    <Button HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Width="125" Height="26">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="7"/>
+                                <Setter Property="BorderBrush" Value="#c1d0dc"/>
+                            </Style>
+                        </Button.Resources>
+                        <TextBlock><InlineUIContainer>
+                                <Image Source="Resources/ic_add_box_black_24dp.png" Width="24"/>
+                            </InlineUIContainer><Run Text=" "/><InlineUIContainer>
+                                <Label Margin="0,-3" Content="新建"/>
+                            </InlineUIContainer></TextBlock>
+                    </Button>
+                    <Button x:Name="ButtonOpen" HorizontalAlignment="Left" Margin="10,42,0,0" VerticalAlignment="Top" Width="125" Height="26" Click="ButtonOpen_Click">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="7"/>
+                                <Setter Property="BorderBrush" Value="#c1d0dc"/>
+                            </Style>
+                        </Button.Resources>
+                        <TextBlock><InlineUIContainer>
+                                <Image Source="Resources/ic_input_black_24dp.png" Width="24"/>
+                            </InlineUIContainer><Run Text=" "/><InlineUIContainer>
+                                <Label Margin="0,-3" Content="打开"/>
+                            </InlineUIContainer></TextBlock>
+                    </Button>
+                    <Button HorizontalAlignment="Left" Margin="150,8,0,0" VerticalAlignment="Top" Width="75" Height="60">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="7"/>
+                                <Setter Property="BorderBrush" Value="#c1d0dc"/>
+                            </Style>
+                        </Button.Resources>
+                        <TextBlock><InlineUIContainer>
+                                <Image Source="Resources/ic_save_black_24dp.png" Width="24" Margin="22,0"/>
+                            </InlineUIContainer><LineBreak/><InlineUIContainer>
+                                <Label Content="保存" Margin="13,0,0,0"/>
+                            </InlineUIContainer></TextBlock>
+                    </Button>
+                    <Label HorizontalAlignment="Left" Margin="234,38,0,0" VerticalAlignment="Top" Content="附加参数" />
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="313,43,0,0" TextWrapping="Wrap" Text="Author#UserName:|" VerticalAlignment="Top" Width="445" MouseDoubleClick="TabControl_MouseDoubleClick">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="4"/>
+                                <Setter Property="BorderBrush" Value="#c1d0dc"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                    <CheckBox Content="自动运行" HorizontalAlignment="Left" Margin="238,12,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" MouseDoubleClick="TabControl_MouseDoubleClick"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header=" 设计 ">
+                <Grid Background="WhiteSmoke" Height="78"/>
+            </TabItem>
+            <TabItem Header=" 切换 ">
+                <Grid Background="WhiteSmoke" Height="78">
+
+                    <Button HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Width="75" Height="60">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="7"/>
+                                <Setter Property="BorderBrush" Value="#c1d0dc"/>
+                            </Style>
+                        </Button.Resources>
+                        <TextBlock><InlineUIContainer>
+                                <Image Source="Resources/ic_add_to_photos_black_24dp.png" Width="24" Margin="22,0"/>
+                            </InlineUIContainer><LineBreak/><InlineUIContainer>
+                                <Label Content="新建页" Margin="5,0,0,0"/>
+                            </InlineUIContainer></TextBlock>
+                    </Button>
+                    <Label HorizontalAlignment="Left" Margin="234,38,0,0" VerticalAlignment="Top" Content="自动切换:" />
+                    <Button HorizontalAlignment="Left" Margin="100,8,0,0" VerticalAlignment="Top" Width="125" Height="26">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="7"/>
+                                <Setter Property="BorderBrush" Value="#c1d0dc"/>
+                            </Style>
+                        </Button.Resources>
+                        <TextBlock><InlineUIContainer>
+                                <Image Source="Resources/ic_add_box_black_24dp.png" Width="24"/>
+                            </InlineUIContainer><Run Text=" "/><InlineUIContainer>
+                                <Label Margin="0,-3" Content="新建切换"/>
+                            </InlineUIContainer></TextBlock>
+                    </Button>
+                    <Button HorizontalAlignment="Left" Margin="100,42,0,0" VerticalAlignment="Top" Width="125" Height="26">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="7"/>
+                                <Setter Property="BorderBrush" Value="#c1d0dc"/>
+                            </Style>
+                        </Button.Resources>
+                        <TextBlock><InlineUIContainer>
+                                <Image Source="Resources/ic_add_box_black_24dp.png" Width="24"/>
+                            </InlineUIContainer><Run Text=" "/><InlineUIContainer>
+                                <Label Margin="0,-3" Content="延时切换"/>
+                            </InlineUIContainer></TextBlock>
+                    </Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header=" 输出 ">
+                <Grid Background="WhiteSmoke" Height="78">
+                    <Button x:Name="ButtonStart" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Width="75" Height="60" Click="ButtonStart_Click">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="7"/>
+                                <Setter Property="BorderBrush" Value="#c1d0dc"/>
+                            </Style>
+                        </Button.Resources>
+                        <TextBlock><InlineUIContainer>
+                                <Image Source="Resources/ic_play_arrow_black_24dp.png" Width="30" Margin="22,0"/>
+                            </InlineUIContainer><LineBreak/><InlineUIContainer>
+                                <Label Content="从头开始" Margin="-2,0,0,0"/>
+                            </InlineUIContainer></TextBlock>
+                    </Button>
+                    <Button HorizontalAlignment="Left" Margin="100,10,0,0" VerticalAlignment="Top" Width="150" Height="26">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="7"/>
+                                <Setter Property="BorderBrush" Value="#c1d0dc"/>
+                            </Style>
+                        </Button.Resources>
+                        <TextBlock><InlineUIContainer>
+                                <Image Source="Resources/ic_skip_next_black_24dp.png" Width="24"/>
+                            </InlineUIContainer><Run Text=" "/><InlineUIContainer>
+                                <Label Margin="0,-3" Content="从当前页开始"/>
+                            </InlineUIContainer></TextBlock>
+                    </Button>
+                    <Button HorizontalAlignment="Left" Margin="275,10,0,0" VerticalAlignment="Top" Width="150" Height="26">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="7"/>
+                                <Setter Property="BorderBrush" Value="#c1d0dc"/>
+                            </Style>
+                        </Button.Resources>
+                        <TextBlock><InlineUIContainer>
+                                <Image Source="Resources/ic_add_box_black_24dp.png" Width="24"/>
+                            </InlineUIContainer><Run Text=" "/><InlineUIContainer>
+                                <Label Margin="0,-3" Content="输出到网络"/>
+                            </InlineUIContainer></TextBlock>
+                    </Button>
+                    <Button HorizontalAlignment="Left" Margin="275,42,0,0" VerticalAlignment="Top" Width="150" Height="26">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="7"/>
+                                <Setter Property="BorderBrush" Value="#c1d0dc"/>
+                            </Style>
+                        </Button.Resources>
+                        <TextBlock><InlineUIContainer>
+                                <Image Source="Resources/ic_add_box_black_24dp.png" Width="24"/>
+                            </InlineUIContainer><Run Text=" "/><InlineUIContainer>
+                                <Label Margin="0,-3" Content="从网络获取"/>
+                            </InlineUIContainer></TextBlock>
+                    </Button>
+                </Grid>
+            </TabItem>
+            <TabItem Header=" 控制台 ">
+                <Grid Background="WhiteSmoke" Height="78">
+                    <RichTextBox x:Name="ConsoleBox" Background="#FFEEEEEE" VerticalScrollBarVisibility="Auto" UndoLimit="0" AcceptsReturn="True" GotFocus="TextBox_GotFocus" MouseDoubleClick="ConsoleBox_MouseDoubleClick">
+                        <FlowDocument>
+                            <Paragraph>
+                                <Run>Lineput 2</Run>
+                                <LineBreak/>
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>                        
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>
