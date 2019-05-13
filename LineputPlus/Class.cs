@@ -12,6 +12,7 @@ using System.Xml.Xsl;
 using System.Linq;
 using LinePutScript;
 using static LineputPlus.Main;
+using System.Text.RegularExpressions;
 
 //Todo:
 //Timer:开始放映的时候回自动开始,显示在右侧
@@ -231,11 +232,13 @@ namespace LineputPlus
         }
 
         /// <summary>
-        /// 将行显示行(实意)转换成行(文本)
+        /// 将行显示行(实意)转换成行(文本) //注 |:| 会直接输出成行
         /// </summary>
         /// <returns>行(文本)</returns>
         public Line ToLine()
         {
+            if (OutPut.StartsWith("|") && OutPut.EndsWith(":|"))
+                return new Line(OutPut.Substring(1));
             return new Line("linedisplay", "", OutPut, ToSubs());
         }
         /// <summary>
@@ -288,13 +291,43 @@ namespace LineputPlus
 
             for (int i = 1; i < displays.Length; i++)
             {
-                if (lines.Last().Equals(displays[i]))
-                {//如果相同就把文本加进去
-                    lines.Last().OutPut += displays[i].OutPut;
+                if (displays[i].OutPut.Contains(":|"))
+                {
+                    if (lines.Last().Equals(displays[i]))
+                    {//如果相同就把文本加进去
+                         displays[i].OutPut = lines.Last().OutPut + displays[i].OutPut;
+                        lines.RemoveAt(lines.Count - 1);
+                    }
+                    string[] spl = Regex.Split(displays[i].OutPut, @"\:\|", RegexOptions.IgnoreCase);
+                    int sp2;
+                    for (int i1 = 0; i1 < spl.Length - 1; i1++)
+                    {
+                        string sp = (string)spl[i1];
+                        sp2 = sp.LastIndexOf('|');
+                        if (sp2 == -1)
+                            lines.Add(new LineDisplay(displays[i]) { OutPut = sp });
+                        else if (sp2 == 0)
+                        {
+                            lines.Add(new LineDisplay() { OutPut = sp + ":|" });
+                        }
+                        else
+                        {
+                            lines.Add(new LineDisplay(displays[i]) { OutPut = sp.Substring(0, sp2) });
+                            lines.Add(new LineDisplay() { OutPut = sp.Substring(sp2) + ":|" });
+                            Console.Write("abc");
+                        }
+                    }
                 }
                 else
-                {//不相同就加新的进去
-                    lines.Add(displays[i]);
+                {
+                    if (lines.Last().Equals(displays[i]))
+                    {//如果相同就把文本加进去
+                        lines.Last().OutPut += displays[i].OutPut;
+                    }
+                    else
+                    {//不相同就加新的进去
+                        lines.Add(displays[i]);
+                    }
                 }
             }
             return lines.ToArray();
@@ -523,7 +556,7 @@ namespace LineputPlus
                     case "verizon":
                         if (sub.info != null)
                         {
-                           Verison = sub.info;
+                            Verison = sub.info;
                         }
                         break;
 
@@ -761,7 +794,7 @@ namespace LineputPlus
                 }
             }
 
-            disThis.OutPut = disThis.OutPut + line.Text;
+            disThis.OutPut += TextDeReplaceMD(line.text);//注:这个是用魔改/stop还是/stop 之所以这么用是因为这个是编辑用不是展示用
             //***一个比较有用的案例: (读取的时候也可以使用这个)
             //TextBox1.Document.Blocks.Add(new Paragraph(new Run("内容") { }))
             if (disThis.UseRun(OAld))
@@ -780,7 +813,21 @@ namespace LineputPlus
                 fd.Blocks.Add(disThis.OutPutParagraph());
             }
         }
-
+        /// <summary>
+        /// 将文本进行反转义处理(正常显示的文本) //魔改版:不更改/stop
+        /// </summary>
+        /// <param name="Reptex">要反转义的文本</param>
+        /// <returns>反转义后的文本 正常显示的文本</returns>
+        public static string TextDeReplaceMD(string Reptex)
+        {
+            Reptex = Reptex.Replace("/tab", "\t");
+            Reptex = Reptex.Replace("/n", "\n");
+            Reptex = Reptex.Replace("/r", "\r");
+            Reptex = Reptex.Replace("/id", "#");
+            Reptex = Reptex.Replace("/!", "/");
+            Reptex = Reptex.Replace("/com", ",");
+            return Reptex;
+        }
         /// <summary>
         /// 显示当前阅读行的//包括替换(演讲用)
         /// </summary>

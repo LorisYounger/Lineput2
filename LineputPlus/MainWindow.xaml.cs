@@ -274,7 +274,15 @@ namespace LineputPlus
                 }
 
             }
+            /// <summary>
+            /// 每页的内容分别储存好 注:可能和源文件Assemblage不同步,使用Save进行同步
+            /// </summary>
             public List<LpsDocument> EachPage = new List<LpsDocument>();
+
+            /// <summary>
+            /// 显示某一页的内容(lpt=>flowdocument
+            /// </summary>
+            /// <param name="Page">页数</param>
             public void DisplaySource(int Page)
             {
                 Document.Document.Blocks.Clear();
@@ -283,6 +291,11 @@ namespace LineputPlus
                     DisplayLine(lin, Document.Document, OADisplay);
                 }
             }
+            /// <summary>
+            /// 显示图片(不精确
+            /// </summary>
+            /// <param name="Page">页面</param>
+            /// <returns></returns>
             public ImageSource DisplayImage(int Page)
             {
                 Bitmap bm = new Bitmap(300, 200);
@@ -390,7 +403,7 @@ namespace LineputPlus
                     if (nu.Text.Contains('\n'))
                     {
                         x = 0;
-                        y += Convert.ToInt16(disThis.FontSize / 2 * nu.Text.Split('\n').Length);
+                        y += Convert.ToInt16(disThis.FontSize / 2 * (nu.Text.Split('\n').Length) - 1);
                     }
                     else
                         x += Convert.ToInt16(disThis.FontSize / 2 * nu.text.Length);
@@ -401,6 +414,11 @@ namespace LineputPlus
                 //修改源
                 return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(bm.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
             }
+            /// <summary>
+            /// 获取标题
+            /// </summary>
+            /// <param name="Page">页数</param>
+            /// <returns></returns>
             public string GetTitle(int Page)
             {
                 string sb = "";
@@ -432,18 +450,24 @@ namespace LineputPlus
                         return sb;
                 }
             }
+            /// <summary>
+            /// 保存某一页
+            /// </summary>
+            /// <param name="Page">页数</param>
             public void SavePage(int Page)
             {
                 EachPage[Page] = LineDisplay.LineDisplaysToLpsDocument(LineDisplay.SimplifyLineDisplays(LineDisplay.XamlToLPT(Document.Document, OADisplay)));
             }
-
+            /// <summary>
+            /// 将编辑内容转换成标准lps,可以直接使用
+            /// </summary>
             public void Save()
             {
                 Assemblage.Clear();
                 Line fl = new Line("LinePut:|ver#" + Verison + ":|" + FirstLineOtherInfo);
                 fl.AddRange(OADisplay.ToSubs());
                 Assemblage.Add(fl);
-                foreach(LptDocument lpt in EachPage)
+                foreach (LptDocument lpt in EachPage)
                 {
                     Assemblage.AddRange(lpt.Assemblage);
                 }
