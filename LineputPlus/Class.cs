@@ -295,7 +295,7 @@ namespace LineputPlus
                 {
                     if (lines.Last().Equals(displays[i]))
                     {//如果相同就把文本加进去
-                         displays[i].OutPut = lines.Last().OutPut + displays[i].OutPut;
+                        displays[i].OutPut = lines.Last().OutPut + displays[i].OutPut;
                         lines.RemoveAt(lines.Count - 1);
                     }
                     string[] spl = Regex.Split(displays[i].OutPut, @"\:\|", RegexOptions.IgnoreCase);
@@ -630,14 +630,13 @@ namespace LineputPlus
                 switch (sub.Name.ToLower())
                 {
                     case "":
-                    default:
                         break;
-                    case "cls":
-                        fd.Blocks.Clear();
-                        break;
+                    //case "cls":Cls不可能出现 出现就是bug
+                    //    fd.Blocks.Clear();
+                    //    break;
                     case "pageend":
                     case "end":
-                        disThis.OutPut += $"|{sub.Name.ToLower()}:|";
+                        Output(new LineDisplay(OAld) { OutPut = $"|{sub.Name.ToLower()}:|" }, fd);
                         break;
                     case "shell":
                     case "goto":
@@ -645,7 +644,7 @@ namespace LineputPlus
                     case "open":
                     case "mov":
                     case "msg":
-                        disThis.OutPut += $"|{sub.Name.ToLower()}#{sub.info}:|";
+                        Output(new LineDisplay(OAld) { OutPut = $"|{sub.Name.ToLower()}#{sub.info}:|" }, fd);
                         break;
 
 
@@ -791,13 +790,40 @@ namespace LineputPlus
                     case "h6":
                         disThis.FontSize = 9;
                         break;
+
+                    default:
+                        //支持行内其他代码,为以后的支持插件做准备
+                        Output(new LineDisplay(OAld) { OutPut = '|' + sub.ToString() }, fd);
+                        break;
                 }
             }
 
             disThis.OutPut += TextDeReplaceMD(line.text);//注:这个是用魔改/stop还是/stop 之所以这么用是因为这个是编辑用不是展示用
+
+            Output(disThis, fd, OAld);//输出
+        }
+        /// <summary>
+        /// 输出内容到FlowDocument
+        /// </summary>
+        /// <param name="disThis">要输出的内容</param>
+        /// <param name="fd">显示的FlowDocument</param>
+        /// <param name="OAld">全局,可不填</param>
+        public static void Output(LineDisplay disThis, FlowDocument fd, LineDisplay OAld = null)
+        {
             //***一个比较有用的案例: (读取的时候也可以使用这个)
             //TextBox1.Document.Blocks.Add(new Paragraph(new Run("内容") { }))
-            if (disThis.UseRun(OAld))
+            if (OAld == null)
+            {
+                if (fd.Blocks.Count != 0 && fd.Blocks.LastBlock.GetType().ToString() == "System.Windows.Documents.Paragraph")
+                {
+                    ((Paragraph)fd.Blocks.LastBlock).Inlines.Add(disThis.OutPutRun());
+                }
+                else
+                {
+                    fd.Blocks.Add(disThis.OutPutParagraph());
+                }
+            }
+            else if (disThis.UseRun(OAld))
             {
                 if (fd.Blocks.Count != 0 && fd.Blocks.LastBlock.GetType().ToString() == "System.Windows.Documents.Paragraph")
                 {
