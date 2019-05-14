@@ -135,44 +135,45 @@ namespace LineputPlus
 
             run.FontSize = FontSize;
             run.FontFamily = FontFamily;
+           
             run.Background = new SolidColorBrush(BackColor);
             run.Foreground = new SolidColorBrush(FontColor);
             //run.TextAlignment = Alignment;
             return run;
         }
 
-        //public Run OutPutRun(LineDisplay OA)//没有这个需求
-        //{
-        //    Run run = new Run(OutPut);
+        public Run OutPutRun(LineDisplay OA)
+        {
+            Run run = new Run(OutPut);
 
-        //    if (OA.Bold != Bold)
-        //        if (Bold)
-        //            run.FontWeight = FontWeights.Bold;
+            if (OA.Bold != Bold)
+                if (Bold)
+                    run.FontWeight = FontWeights.Bold;
 
-        //    if (OA.Italic != Italic)
-        //        if (Italic)
-        //            run.FontStyle = FontStyles.Italic;
+            if (OA.Italic != Italic)
+                if (Italic)
+                    run.FontStyle = FontStyles.Italic;
 
-        //    if (OA.Underline != Underline)
-        //        if (Underline)
-        //            run.TextDecorations = TextDecorations.Underline;
+            if (OA.Underline != Underline)
+                if (Underline)
+                    run.TextDecorations = TextDecorations.Underline;
 
-        //    if (OA.Strikethrough != Strikethrough)
-        //        if (Strikethrough)
-        //            run.TextDecorations = TextDecorations.Strikethrough;
+            if (OA.Strikethrough != Strikethrough)
+                if (Strikethrough)
+                    run.TextDecorations = TextDecorations.Strikethrough;
 
-        //    if (OA.FontSize != FontSize)
-        //        run.FontSize = FontSize;
-        //    if (OA.FontFamily != FontFamily)
-        //        run.FontFamily = FontFamily;
-        //    if (OA.BackColor != BackColor)
-        //        run.Background = new SolidColorBrush(BackColor);
-        //    if (OA.FontColor != FontColor)
-        //        run.Foreground = new SolidColorBrush(FontColor);
-        //    //run.TextAlignment = Alignment;
-        //    return run;
-        //}
-        //public Paragraph OutPutParagraph(LineDisplay OA)//没有OA需求
+            if (OA.FontSize != FontSize)
+                run.FontSize = FontSize;
+            if (OA.FontFamily != FontFamily)
+                run.FontFamily = FontFamily;
+            if (OA.BackColor != BackColor)
+                run.Background = new SolidColorBrush(BackColor);
+            if (OA.FontColor != FontColor)
+                run.Foreground = new SolidColorBrush(FontColor);
+            //run.TextAlignment = Alignment;
+            return run;
+        }
+        //public Paragraph OutPutParagraph(LineDisplay OA)//没有这需求 新建paragraph的时候是没有格式的，使用OA会呈现错误的格式
         //{
         //    Paragraph run = new Paragraph(new Run(OutPut));
 
@@ -528,6 +529,7 @@ namespace LineputPlus
                         break;
 
                     case "backgroundcolor":
+                    case "background":
                     case "allbackcolor":
                     case "backcolor":
                         if (sub.info == null)
@@ -630,6 +632,7 @@ namespace LineputPlus
                 switch (sub.Name.ToLower())
                 {
                     case "":
+                    case "linedisplay"://防止自动生成的代码中linedisplay混淆
                         break;
                     //case "cls":Cls不可能出现 出现就是bug
                     //    fd.Blocks.Clear();
@@ -827,7 +830,7 @@ namespace LineputPlus
             {
                 if (fd.Blocks.Count != 0 && fd.Blocks.LastBlock.GetType().ToString() == "System.Windows.Documents.Paragraph")
                 {
-                    ((Paragraph)fd.Blocks.LastBlock).Inlines.Add(disThis.OutPutRun());
+                    ((Paragraph)fd.Blocks.LastBlock).Inlines.Add(disThis.OutPutRun(OAld));
                 }
                 else
                 {

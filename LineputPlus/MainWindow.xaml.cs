@@ -108,96 +108,9 @@ namespace LineputPlus
                 bt.Click += Bt_Click;
                 LeftPanel.Children.Add(bt);
             }
+            TextBoxFirstLineOtherInfo.Text = LPTED.FirstLineOtherInfo;
             NowPage = 0;
             LPTED.DisplaySource(NowPage);
-        }
-        /// <summary>
-        /// 左侧按钮被选中
-        /// </summary>
-        /// <param name="sender">按钮</param>
-        /// <param name="e">信息</param>
-        private void Bt_Click(object sender, RoutedEventArgs e)
-        {
-            int chosepage = Convert.ToInt32(((Button)sender).Name.Substring(2));
-            //MessageBox.Show(chosepage.ToString());
-            TextBlock tb = (TextBlock)((Button)LeftPanel.Children[NowPage]).Content;
-            //获取tb里面的内容//拿不到,不会
-            //((System.Windows.Controls.Image)tb.Inlines.FirstInline.).Source = LPTED.DisplayImage(NowPage);
-            //所以干脆就清空了
-            tb.Inlines.Clear();
-            tb.Inlines.Add(new System.Windows.Controls.Image()
-            {
-                Source = GenerateImage(TextBox1),
-                Height = 80,
-                Width = 120,
-                Margin = new Thickness(2, 0, 0, 0),
-                Stretch = Stretch.UniformToFill
-            });
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Label()
-            {
-                Margin = new Thickness(7, 0, 0, 0),
-                Content = LPTED.GetTitle(NowPage)
-            });
-
-            if (NowPage == chosepage)
-                return;
-            //储存
-            LPTED.SavePage(NowPage);
-
-            //跳转
-            NowPage = chosepage;
-            LPTED.DisplaySource(NowPage);
-        }
-        bool AutoCloseToolBar = false;
-        private void TabControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            AutoCloseToolBar = !AutoCloseToolBar;
-            if (AutoCloseToolBar)
-                ToolBar.Background = new SolidColorBrush(Colors.YellowGreen);
-            else
-                ToolBar.Background = new SolidColorBrush(Colors.SkyBlue);
-            ToolBarHeight.Height = new GridLength(110, GridUnitType.Pixel);
-        }
-
-        private void ConsoleBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            AutoCloseToolBar = !AutoCloseToolBar;
-            if (AutoCloseToolBar)
-                ToolBar.Background = new SolidColorBrush(Colors.YellowGreen);
-            else
-                ToolBar.Background = new SolidColorBrush(Colors.SkyBlue);
-            ToolBarHeight.Height = new GridLength(110, GridUnitType.Pixel);
-        }
-
-        private void ToolBar_MouseLeave(object sender, MouseEventArgs e)
-        {
-            if (AutoCloseToolBar)
-                ToolBarHeight.Height = new GridLength(30, GridUnitType.Pixel);
-        }
-
-        private void ToolBar_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if (AutoCloseToolBar)
-                ToolBarHeight.Height = new GridLength(110, GridUnitType.Pixel);
-        }
-
-        private void Button_MouseEnter(object sender, MouseEventArgs e)
-        {
-            ((Button)sender).Background = new SolidColorBrush(Colors.SkyBlue);
-        }
-
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            ((RichTextBox)sender).Selection.Select(((RichTextBox)sender).Document.ContentEnd, ((RichTextBox)sender).Document.ContentEnd);
-        }
-
-        private void ButtonStart_Click(object sender, RoutedEventArgs e)
-        {
-            Lineputxaml lineputxaml = new Lineputxaml();
-            this.Hide();
-            lineputxaml.ShowDialog();
-            this.Show();
         }
 
         /// <summary>
@@ -252,10 +165,11 @@ namespace LineputPlus
             public LPTEditor(RichTextBox fdm, string lpt) : base(lpt)
             {
                 Document = fdm;
-                this.Load(lpt);
+                //this.Load(lpt);//盲猜不需要读取，lps读过了
+
 
                 //第一行跳过不读(后续将内容放进来)
-                ReadNext();
+                LineNode = 1;
 
                 //将页面进行分割
                 Line tmp;
@@ -265,12 +179,12 @@ namespace LineputPlus
                 while (this.ReadCanNext())
                 {
                     tmp = ReadNext();
-                    if (tmp.Name.ToLower() == "cls")//cls必须为开头行//回到本质:lpt不追求大小写
+                    if (tmp.Name.ToLower() == "cls")//cls必须为开头行//回到本质:lpt不追求大小写(但是LPS追求/区分)
                     {
                         EachPage.Add(new LpsDocument());
                     }
                     //作为新的page
-                    EachPage.Last().AddLine(tmp);
+                    //EachPage.Last().AddLine(tmp);不加进去，这个是CLS,之后在save的时候再加
                 }
 
             }
@@ -286,6 +200,7 @@ namespace LineputPlus
             public void DisplaySource(int Page)
             {
                 Document.Document.Blocks.Clear();
+                Document.Background = new SolidColorBrush(OADisplay.BackColor);
                 foreach (Line lin in EachPage[Page])
                 {
                     DisplayLine(lin, Document.Document, OADisplay);
@@ -470,9 +385,14 @@ namespace LineputPlus
                 foreach (LptDocument lpt in EachPage)
                 {
                     Assemblage.AddRange(lpt.Assemblage);
+                    Assemblage.Add(new Line("cls:|"));//加入cls分页符号到每一行
                 }
             }
         }
+
+
+
+        //--------界面方法----------
 
         private void ButtonOpen_Click(object sender, RoutedEventArgs e)
         {
@@ -483,7 +403,94 @@ namespace LineputPlus
                 OpenFile(openfile.FileName);
             }
         }
+        /// <summary>
+        /// 左侧按钮被选中
+        /// </summary>
+        /// <param name="sender">按钮</param>
+        /// <param name="e">信息</param>
+        private void Bt_Click(object sender, RoutedEventArgs e)
+        {
+            int chosepage = Convert.ToInt32(((Button)sender).Name.Substring(2));
+            //MessageBox.Show(chosepage.ToString());
+            TextBlock tb = (TextBlock)((Button)LeftPanel.Children[NowPage]).Content;
+            //获取tb里面的内容//拿不到,不会
+            //((System.Windows.Controls.Image)tb.Inlines.FirstInline.).Source = LPTED.DisplayImage(NowPage);
+            //所以干脆就清空了
+            tb.Inlines.Clear();
+            tb.Inlines.Add(new System.Windows.Controls.Image()
+            {
+                Source = GenerateImage(TextBox1),
+                Height = 80,
+                Width = 120,
+                Margin = new Thickness(2, 0, 0, 0),
+                Stretch = Stretch.UniformToFill
+            });
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Label()
+            {
+                Margin = new Thickness(7, 0, 0, 0),
+                Content = LPTED.GetTitle(NowPage)
+            });
 
+            if (NowPage == chosepage)
+                return;
+            //储存
+            LPTED.SavePage(NowPage);
+
+            //跳转
+            NowPage = chosepage;
+            LPTED.DisplaySource(NowPage);
+        }
+        bool AutoCloseToolBar = false;
+        private void TabControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            AutoCloseToolBar = !AutoCloseToolBar;
+            if (AutoCloseToolBar)
+                ToolBar.Background = new SolidColorBrush(Colors.YellowGreen);
+            else
+                ToolBar.Background = new SolidColorBrush(Colors.SkyBlue);
+            ToolBarHeight.Height = new GridLength(110, GridUnitType.Pixel);
+        }
+
+        private void ConsoleBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            AutoCloseToolBar = !AutoCloseToolBar;
+            if (AutoCloseToolBar)
+                ToolBar.Background = new SolidColorBrush(Colors.YellowGreen);
+            else
+                ToolBar.Background = new SolidColorBrush(Colors.SkyBlue);
+            ToolBarHeight.Height = new GridLength(110, GridUnitType.Pixel);
+        }
+
+        private void ToolBar_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (AutoCloseToolBar)
+                ToolBarHeight.Height = new GridLength(30, GridUnitType.Pixel);
+        }
+
+        private void ToolBar_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (AutoCloseToolBar)
+                ToolBarHeight.Height = new GridLength(110, GridUnitType.Pixel);
+        }
+
+        private void Button_MouseEnter(object sender, MouseEventArgs e)
+        {
+            ((Button)sender).Background = new SolidColorBrush(Colors.SkyBlue);
+        }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ((RichTextBox)sender).Selection.Select(((RichTextBox)sender).Document.ContentEnd, ((RichTextBox)sender).Document.ContentEnd);
+        }
+
+        private void ButtonStart_Click(object sender, RoutedEventArgs e)
+        {
+            Lineputxaml lineputxaml = new Lineputxaml();
+            this.Hide();
+            lineputxaml.ShowDialog();
+            this.Show();
+        }
 
     }
 }
