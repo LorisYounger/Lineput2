@@ -15,6 +15,13 @@ using System.Drawing;
 using System.IO;
 using Color = System.Windows.Media.Color;
 using FontFamily = System.Windows.Media.FontFamily;
+using System.Windows.Forms;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
+using Button = System.Windows.Controls.Button;
+using RichTextBox = System.Windows.Controls.RichTextBox;
+using Label = System.Windows.Controls.Label;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using MessageBox = System.Windows.MessageBox;
 
 namespace LineputPlus
 {
@@ -67,7 +74,6 @@ namespace LineputPlus
             OutPut($"文件{ path }已打开\n", Colors.Orange);
             string str = sr.ReadToEnd();
             sr.Dispose();
-            sr = null;
             OpenLPT(str);
             //版本检查
             if (LPTED.Verison.Contains("1.") || LPTED.Verison == "-1")
@@ -144,9 +150,9 @@ namespace LineputPlus
         {
             if (cl.A == 0)
                 cl = Colors.White;
-            FontFamily ff = new FontFamily(fontfamily);
             Run run = new Run(context);
             run.FontSize = fontsize;
+            run.FontFamily = new FontFamily(fontfamily);
             run.Foreground = new SolidColorBrush(cl);
             if (ConsoleBox.Document.Blocks.Count != 0 && ConsoleBox.Document.Blocks.LastBlock.GetType().ToString() == "System.Windows.Documents.Paragraph")
             {
@@ -491,6 +497,70 @@ namespace LineputPlus
             lineputxaml.ShowDialog();
             this.Show();
         }
+        //ToDO：完善按钮功能
+        private void ButtonOABackGroundColor_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonOABackGroundColor.IsChecked = false;
+            ColorDialog cd = new ColorDialog();
+            cd.Color = ColorConvent(LPTED.OADisplay.BackColor);
+            if (cd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                LPTED.OADisplay.BackColor = ColorConvent(cd.Color);
+                ButtonOABackGroundColor.Background = new SolidColorBrush(LPTED.OADisplay.BackColor);
+            }
+        }
 
+        private void ButtonOAFontColor_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonOAFontColor.IsChecked = false;
+            ColorDialog cd = new ColorDialog();
+            cd.Color = ColorConvent(LPTED.OADisplay.FontColor);
+            if (cd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                LPTED.OADisplay.FontColor = ColorConvent(cd.Color);
+                ButtonOAFontColor.Background = new SolidColorBrush(LPTED.OADisplay.FontColor);
+            }
+        }
+        //Todo:修改全局需要将文档重新载入//可以只载入一个页面 其他的不管了
+        //Todo:每个页面有自己单独的OAdisplay(eg:allfontcolor)
+        //Todo:打开文件的时候fontcolor需要应用到textbox1.foreground
+        private void ButtonOAFontFamily_Click(object sender, RoutedEventArgs e)
+        {
+            FontDialog fd = new FontDialog();
+            fd.Font = new Font(LPTED.OADisplay.FontFamily.ToString(), LPTED.OADisplay.FontSize);
+            if (fd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                LPTED.OADisplay.FontFamily = new FontFamily(fd.Font.FontFamily.ToString());
+                ButtonOAFontColor.Background = new SolidColorBrush(LPTED.OADisplay.FontColor);
+            }
+        }
+
+        private void ComboBoxOAFontSize_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ChangeFontSize();
+        }
+
+        private void ComboBoxOAFontSize_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                ChangeFontSize();
+        }
+
+        private void ComboBoxOAFontSize_DropDownClosed(object sender, EventArgs e)
+        {
+            ChangeFontSize();
+        }
+        private void ChangeFontSize()
+        {
+            if (!float.TryParse(ComboBoxOAFontSize.Text, out float fsize))
+            {
+                MessageBox.Show("请输入数字","设置字体大小");
+                return;
+            }
+            if (LPTED.OADisplay.FontSize != fsize)
+            {
+                MessageBox.Show(fsize.ToString() +"\n" + LPTED.OADisplay.FontSize.ToString());
+            }
+        }
     }
 }

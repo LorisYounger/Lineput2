@@ -33,7 +33,7 @@ namespace LineputPlus
         /// </summary>
         /// <param name="lps">文档</param>
         public Lineputxaml(LpsDocument lps)
-        {
+        {//ToDo:展示
             this.WindowState = WindowState.Maximized;
             InitializeComponent();
         }

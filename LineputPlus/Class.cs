@@ -56,6 +56,10 @@ namespace LineputPlus
         {
             return System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B);
         }
+        public static Color ColorConvent(System.Drawing.Color color)
+        {
+            return Color.FromArgb(color.A, color.R, color.G, color.B);
+        }
     }
 
     /// <summary>
