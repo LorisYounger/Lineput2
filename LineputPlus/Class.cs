@@ -139,7 +139,7 @@ namespace LineputPlus
 
             run.FontSize = FontSize;
             run.FontFamily = FontFamily;
-           
+
             run.Background = new SolidColorBrush(BackColor);
             run.Foreground = new SolidColorBrush(FontColor);
             //run.TextAlignment = Alignment;
@@ -166,7 +166,7 @@ namespace LineputPlus
                 if (Strikethrough)
                     run.TextDecorations = TextDecorations.Strikethrough;
 
-            if (OA.FontSize != FontSize)
+            if (OA.FontSize.ToString("f1") != FontSize.ToString("f1"))
                 run.FontSize = FontSize;
             if (OA.FontFamily != FontFamily)
                 run.FontFamily = FontFamily;
@@ -283,6 +283,48 @@ namespace LineputPlus
             return subs.ToArray();
         }
         /// <summary>
+        /// 将显示行(实意)转换成Sub集合
+        /// </summary>
+        /// <returns>行(文本)</returns>
+        public Sub[] ToSubs(LineDisplay OA)
+        {
+            List<Sub> subs = new List<Sub>();
+            if (OA.Bold != Bold)
+                if (Bold)
+                    subs.Add(new Sub("Bold", ""));
+            if (OA.Italic != Italic)
+                if (Italic)
+                    subs.Add(new Sub("Italic", ""));
+            if (OA.Underline != Underline)
+                if (Underline)
+                    subs.Add(new Sub("Underline", ""));
+            if (OA.Strikethrough != Strikethrough)
+                if (Strikethrough)
+                    subs.Add(new Sub("Deleteline", ""));
+
+            if (OA.FontSize.ToString("f1") != FontSize.ToString("f1"))
+                subs.Add(new Sub("FontSize", FontSize.ToString("f2")));
+            if (OA.FontFamily != FontFamily)
+                subs.Add(new Sub("FontFamily", FontFamily.ToString()));
+            if (OA.BackColor != BackColor)
+                subs.Add(new Sub("BackColor", ColorToHTML(BackColor)));
+            if (OA.FontColor != FontColor)
+                subs.Add(new Sub("FontColor", ColorToHTML(FontColor)));
+            if (OA.Alignment != Alignment)
+                switch (Alignment)
+                {
+                    case TextAlignment.Left:
+                        subs.Add(new Sub("Left", "")); break;
+                    case TextAlignment.Right:
+                        subs.Add(new Sub("Right", "")); break;
+                    case TextAlignment.Center:
+                        subs.Add(new Sub("Center", "")); break;
+                    case TextAlignment.Justify:
+                        subs.Add(new Sub("Justify", "")); break;
+                }
+            return subs.ToArray();
+        }
+        /// <summary>
         /// 对多个实意行进行简化处理 (合并同类项)
         /// </summary>
         /// <param name="displays">要被整理的多个实意</param>
@@ -386,7 +428,7 @@ namespace LineputPlus
                 if (element.Name == "Paragraph")
                 {
                     GetLineDisplaysFromLoopXmlElement(element, lps, OA);
-                }
+                }//ToDo:支持图片
             }
             return lps.ToArray();
         }
@@ -622,7 +664,7 @@ namespace LineputPlus
         /// </summary>
         /// <param name="line">哪一行的内容是</param>
         /// <param name="fd">要被显示的文档</param>
-        public static void DisplayLine(Line line, FlowDocument fd, LineDisplay OAld)
+        public static void DisplayLine(Line line, FlowDocument fd, LineDisplay OAld,ref LineDisplay IAld)
         {
             //Note:
             //pageend等指令插入使用|pageend:|
@@ -631,11 +673,15 @@ namespace LineputPlus
             line.InsertSub(0, line);//Line将会被加进去,以至于可以直接在遍历中找到Line.Name+info
                                     //输出的这一行将会用什么
             LineDisplay disThis = new LineDisplay(OAld);
+            //IAld = new LineDisplay(OAld);//不new 在外部完成 毕竟不止有一个line
+            //区别:OA=全局,不会更变 IA=局部,会被更改
+            
             foreach (Sub sub in line)
             {
                 switch (sub.Name.ToLower())
                 {
                     case "":
+                    case "ia"://防止和IAdisplay头重叠
                     case "linedisplay"://防止自动生成的代码中linedisplay混淆
                         break;
                     //case "cls":Cls不可能出现 出现就是bug
@@ -675,7 +721,7 @@ namespace LineputPlus
                         else
                         {
                             disThis.FontFamily = new FontFamily(sub.Info);
-                            OAld.FontFamily = disThis.FontFamily;
+                            IAld.FontFamily = disThis.FontFamily;
                         }
                         break;
                     case "fontcolor":
@@ -696,7 +742,7 @@ namespace LineputPlus
                         else
                         {
                             disThis.FontColor = HTMLToColor(sub.info);
-                            OAld.FontColor = disThis.FontColor;
+                            IAld.FontColor = disThis.FontColor;
                         }
                         break;
                     case "fontsize":
@@ -717,7 +763,7 @@ namespace LineputPlus
                         else
                         {
                             disThis.FontSize = Convert.ToSingle(sub.info);
-                            OAld.FontSize = disThis.FontSize;
+                            IAld.FontSize = disThis.FontSize;
                         }
                         break;
                     case "backcolor":
@@ -738,7 +784,7 @@ namespace LineputPlus
                         else
                         {
                             disThis.BackColor = HTMLToColor(sub.info);
-                            OAld.BackColor = disThis.BackColor;
+                            IAld.BackColor = disThis.BackColor;
                         }
                         break;
                     case "backgroundcolor":
@@ -807,7 +853,7 @@ namespace LineputPlus
 
             disThis.OutPut += TextDeReplaceMD(line.text);//注:这个是用魔改/stop还是/stop 之所以这么用是因为这个是编辑用不是展示用
 
-            Output(disThis, fd, OAld);//输出
+            Output(disThis, fd, IAld);//输出
         }
         /// <summary>
         /// 输出内容到FlowDocument

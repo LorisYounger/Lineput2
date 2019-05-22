@@ -99,13 +99,13 @@
                             </Style>
                         </TextBox.Resources>
                     </TextBox>
-                    <CheckBox x:Name="ButtonOABackGroundColor" Content="背景颜色" HorizontalAlignment="Left" Margin="328,12,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" MouseDoubleClick="TabControl_MouseDoubleClick" Background="#FF444444" Click="ButtonOABackGroundColor_Click"/>
-                    <CheckBox x:Name="ButtonOAFontColor" Content="字体颜色" HorizontalAlignment="Left" Margin="420,12,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" MouseDoubleClick="TabControl_MouseDoubleClick" Background="White"/>
-                    <Button x:Name="ButtonOAFontFamily" Content="字体:Microsoft YaHei UI" HorizontalAlignment="Left" Margin="514,14,0,0" VerticalAlignment="Top" Width="120" FontSize="9" Click="ButtonOAFontFamily_Click"/>
-                    <Label Content="字体大小" HorizontalAlignment="Left" Margin="635,6,0,0" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="ComboBoxOAFontSize" HorizontalAlignment="Left" Margin="706,8,0,0" VerticalAlignment="Top" Width="50" IsEditable="True" SelectedIndex="2" LostFocus="ComboBoxOAFontSize_LostFocus" PreviewKeyDown="ComboBoxOAFontSize_PreviewKeyDown" DropDownClosed="ComboBoxOAFontSize_DropDownClosed">
+                    <CheckBox x:Name="ButtonOABackGroundColor" Content="背景颜色" HorizontalAlignment="Left" Margin="321,12,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" MouseDoubleClick="TabControl_MouseDoubleClick" Background="#FF444444" Click="ButtonOABackGroundColor_Click"/>
+                    <CheckBox x:Name="ButtonOAFontColor" Content="字体颜色" HorizontalAlignment="Left" Margin="413,12,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" MouseDoubleClick="TabControl_MouseDoubleClick" Background="White"/>
+                    <Button x:Name="ButtonOAFontFamily" Content="字体:Microsoft YaHei UI" HorizontalAlignment="Left" Margin="507,14,0,0" VerticalAlignment="Top" Width="120" FontSize="9" Click="ButtonOAFontFamily_Click"/>
+                    <Label Content="字体大小" HorizontalAlignment="Left" Margin="628,6,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="ComboBoxOAFontSize" HorizontalAlignment="Left" Margin="699,8,0,0" VerticalAlignment="Top" Width="58" IsEditable="True" SelectedIndex="2" LostFocus="ComboBoxOAFontSize_LostFocus" PreviewKeyDown="ComboBoxOAFontSize_PreviewKeyDown" DropDownClosed="ComboBoxOAFontSize_DropDownClosed">
                         <system:String>6</system:String>
-                        <system:String></system:String>
+                        <system:String>9</system:String>
                         <system:String>12</system:String>
                         <system:String>16</system:String>
                         <system:String>24</system:String>
