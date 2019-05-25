@@ -60,6 +60,25 @@ namespace LineputPlus
         {
             return Color.FromArgb(color.A, color.R, color.G, color.B);
         }
+
+        public static int[] CustomColors
+        {
+            set
+            {
+                Properties.Settings.Default.CustomColors = string.Join("|", value);
+                Properties.Settings.Default.Save();
+            }
+            get
+            {
+                string[] vs = Properties.Settings.Default.CustomColors.Split('|');
+                int[] vi = new int[vs.Length];
+                for (int i = 0; i < vs.Length; i++)
+                {
+                    vi[i] = Convert.ToInt32(vs[i]);
+                }
+                return vi;
+            }
+        }
     }
 
     /// <summary>
@@ -247,6 +266,17 @@ namespace LineputPlus
             return new Line("linedisplay", "", OutPut, ToSubs());
         }
         /// <summary>
+        /// 将行显示行(实意)转换成行(文本) //注 |:| 会直接输出成行
+        /// </summary>
+        /// <param name="OA">全局变量</param>
+        /// <returns>行(文本)</returns>
+        public Line ToLine(LineDisplay OA)
+        {
+            if (OutPut.StartsWith("|") && OutPut.EndsWith(":|"))
+                return new Line(OutPut.Substring(1));
+            return new Line("linedisplay", "", OutPut, ToSubs(OA));
+        }
+        /// <summary>
         /// 将显示行(实意)转换成Sub集合
         /// </summary>
         /// <returns>行(文本)</returns>
@@ -285,6 +315,7 @@ namespace LineputPlus
         /// <summary>
         /// 将显示行(实意)转换成Sub集合
         /// </summary>
+        /// <param name="OA">全局变量</param>
         /// <returns>行(文本)</returns>
         public Sub[] ToSubs(LineDisplay OA)
         {
@@ -382,7 +413,7 @@ namespace LineputPlus
         /// <summary>
         /// 将多个实意转换成Lps文档
         /// </summary>
-        /// <param name="displays"></param>
+        /// <param name="displays">实意行显示</param>
         /// <returns></returns>
         public static LpsDocument LineDisplaysToLpsDocument(LineDisplay[] displays)
         {
@@ -390,6 +421,21 @@ namespace LineputPlus
             foreach (LineDisplay ld in displays)
             {
                 lps.AddLine(ld.ToLine());
+            }
+            return lps;
+        }
+        /// <summary>
+        /// 将多个实意转换成Lps文档
+        /// </summary>
+        /// <param name="displays">实意行显示</param>
+        /// <param name="OA">全局变量</param>
+        /// <returns></returns>
+        public static LpsDocument LineDisplaysToLpsDocument(LineDisplay[] displays, LineDisplay OA)
+        {
+            LpsDocument lps = new LpsDocument();
+            foreach (LineDisplay ld in displays)
+            {
+                lps.AddLine(ld.ToLine(OA));
             }
             return lps;
         }
@@ -419,7 +465,7 @@ namespace LineputPlus
             XmlDocument xml = new XmlDocument();
             xml.Load(XmlReader.Create(ms, new XmlReaderSettings() { IgnoreComments = true }));
 
-            //读取XAML转换成LPT
+            //读取XAML转换成LineDisplay
 
             //得到顶层节点列表 
             XmlNodeList topM = xml.DocumentElement.ChildNodes;
@@ -428,7 +474,17 @@ namespace LineputPlus
                 if (element.Name == "Paragraph")
                 {
                     GetLineDisplaysFromLoopXmlElement(element, lps, OA);
-                }//ToDo:支持图片
+                    if (lps.Count == 0)
+                        lps.Add(new LineDisplay(OA) { OutPut = "\n" });
+                    else
+                        lps.Last().OutPut += '\n';
+                }
+                else
+                {//ToDo:支持图片
+                    MessageBox.Show(element.Name);
+                }
+                //清空多余的回车
+                lps.Last().OutPut = lps.Last().OutPut.TrimEnd('\n');
             }
             return lps.ToArray();
         }
@@ -446,15 +502,16 @@ namespace LineputPlus
                 switch (atr.NodeType)
                 {
                     case XmlNodeType.Text:
-                        OA.OutPut = atr.Value;
+                        tmp.OutPut += atr.Value;
                         break;
                     case XmlNodeType.Attribute:
                         switch (atr.Name)
                         {
                             case "":
                             default:
+                                MessageBox.Show(atr.Name);
                                 break;
-
+                            //ToDo:支持图片
                             case "FontFamily":
                                 tmp.FontFamily = new FontFamily(atr.Value);
                                 break;
@@ -497,6 +554,12 @@ namespace LineputPlus
                                 }
                                 break;
                         }
+                        break;
+                    case XmlNodeType.Element:
+                        MessageBox.Show(atr.Name);
+                        break;
+                    default:
+                        MessageBox.Show(atr.Name);
                         break;
                         //case XmlNodeType.Attribute:
                         //    tmp =GetLineDisplayFormXmlElement((XmlElement)atr, tmp);
@@ -541,9 +604,13 @@ namespace LineputPlus
                         GetLineDisplaysFromLoopXmlElement((XmlElement)xn, displays, tmp);
                         break;
                     case XmlNodeType.SignificantWhitespace:
-                        displays.Add(new LineDisplay(OA) { OutPut = " " });
+                        if (displays.Count == 0)
+                            displays.Add(new LineDisplay(OA) { OutPut = xn.InnerText });
+                        else
+                            displays.Last().OutPut += xn.InnerText;
                         break;
-                    default:
+                    default://ToDo:支持图片
+                        MessageBox.Show(xn.Name);
                         break;
                 }
             }
@@ -664,7 +731,7 @@ namespace LineputPlus
         /// </summary>
         /// <param name="line">哪一行的内容是</param>
         /// <param name="fd">要被显示的文档</param>
-        public static void DisplayLine(Line line, FlowDocument fd, LineDisplay OAld,ref LineDisplay IAld)
+        public static void DisplayLine(Line line, FlowDocument fd, LineDisplay OAld, ref LineDisplay IAld)
         {
             //Note:
             //pageend等指令插入使用|pageend:|
@@ -675,7 +742,7 @@ namespace LineputPlus
             LineDisplay disThis = new LineDisplay(OAld);
             //IAld = new LineDisplay(OAld);//不new 在外部完成 毕竟不止有一个line
             //区别:OA=全局,不会更变 IA=局部,会被更改
-            
+
             foreach (Sub sub in line)
             {
                 switch (sub.Name.ToLower())

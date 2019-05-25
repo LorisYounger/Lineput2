@@ -48,25 +48,8 @@ namespace LineputPlus
         {
             int chosepage = Convert.ToInt32(((Button)sender).Name.Substring(2));
             //MessageBox.Show(chosepage.ToString());
-            TextBlock tb = (TextBlock)((Button)LeftPanel.Children[NowPage]).Content;
-            //获取tb里面的内容//拿不到,不会
-            //((System.Windows.Controls.Image)tb.Inlines.FirstInline.).Source = LPTED.DisplayImage(NowPage);
-            //所以干脆就清空了
-            tb.Inlines.Clear();
-            tb.Inlines.Add(new System.Windows.Controls.Image()
-            {
-                Source = GenerateImage(TextBox1),
-                Height = 80,
-                Width = 120,
-                Margin = new Thickness(2, 0, 0, 0),
-                Stretch = Stretch.UniformToFill
-            });
-            tb.Inlines.Add(new LineBreak());
-            tb.Inlines.Add(new Label()
-            {
-                Margin = new Thickness(7, 0, 0, 0),
-                Content = LPTED.GetTitle(NowPage)
-            });
+            //刷新当前页面
+            RefreshLeftPanelSingle();
 
             if (NowPage == chosepage)
                 return;
@@ -132,28 +115,40 @@ namespace LineputPlus
         {
             ButtonOABackGroundColor.IsChecked = false;
             ColorDialog cd = new ColorDialog();
+            cd.CustomColors = CustomColors;
             cd.Color = ColorConvent(LPTED.OADisplay.BackColor);
             if (cd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                LPTED.SavePage(NowPage);//先保存
                 LPTED.OADisplay.BackColor = ColorConvent(cd.Color);
                 ButtonOABackGroundColor.Background = new SolidColorBrush(LPTED.OADisplay.BackColor);
+                LPTED.DisplaySource(NowPage);//重新加载
+                 //重新绘制全部图片
+                RefreshLeftPanelAll();
             }
+            //储存自定义颜色
+            CustomColors = cd.CustomColors;
         }
 
         private void ButtonOAFontColor_Click(object sender, RoutedEventArgs e)
         {
             ButtonOAFontColor.IsChecked = false;
             ColorDialog cd = new ColorDialog();
+            cd.CustomColors = CustomColors;
             cd.Color = ColorConvent(LPTED.OADisplay.FontColor);
             if (cd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                LPTED.SavePage(NowPage);//先保存
                 LPTED.OADisplay.FontColor = ColorConvent(cd.Color);
                 ButtonOAFontColor.Background = new SolidColorBrush(LPTED.OADisplay.FontColor);
-                //Todo:重新绘制全部图片
+                LPTED.DisplaySource(NowPage);//重新加载
+                //重新绘制全部图片
+                RefreshLeftPanelAll();
             }
+            //储存自定义颜色
+            CustomColors = cd.CustomColors;
         }
         //Todo:修改全局需要将文档重新载入//可以只载入一个页面 其他的暂时不管了 (除了背景颜色要手动修改
-        //Todo:打开文件的时候fontcolor需要应用到textbox1.foreground
         private void ButtonOAFontFamily_Click(object sender, RoutedEventArgs e)
         {
             FontDialog fd = new FontDialog();
@@ -200,10 +195,12 @@ namespace LineputPlus
                 LPTED.OADisplay.FontSize = fsize;
 
                 LPTED.DisplaySource(NowPage);//重新加载
+                 //重新绘制全部图片
+                RefreshLeftPanelAll();
             }
         }
 
-
+        //Todo:TextBox清空撤回
         //Todo:IA的应用于更改(在切换栏
     }
 }

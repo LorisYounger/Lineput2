@@ -74,6 +74,49 @@ namespace LineputPlus
         public void OpenLPT(string lpt)
         {
             LPTED = new LPTEditor(TextBox1, lpt);
+            //显示左面板内容
+            RefreshLeftPanelAll();
+            //给设置页面加上
+            TextBoxFirstLineOtherInfo.Text = LPTED.FirstLineOtherInfo;
+            ButtonOAFontColor.Background = new SolidColorBrush(LPTED.OADisplay.FontColor);
+            TextBox1.Foreground = new SolidColorBrush(LPTED.OADisplay.FontColor);
+            ButtonOABackGroundColor.Background = new SolidColorBrush(LPTED.OADisplay.BackColor);
+            ButtonOAFontFamily.Content = "字体:" + LPTED.OADisplay.FontFamily.ToString();
+            ComboBoxOAFontSize.Text = LPTED.OADisplay.FontSize.ToString("f1");
+
+            NowPage = 0;
+            LPTED.DisplaySource(NowPage);
+        }
+        /// <summary>
+        /// 刷新当前页面的左侧窗体，并用截图代替生成图片
+        /// </summary>
+        public void RefreshLeftPanelSingle()
+        {
+            TextBlock tb = (TextBlock)((Button)LeftPanel.Children[NowPage]).Content;
+            //获取tb里面的内容//拿不到,不会
+            //((System.Windows.Controls.Image)tb.Inlines.FirstInline.).Source = LPTED.DisplayImage(NowPage);
+            //所以干脆就清空了
+            tb.Inlines.Clear();
+            tb.Inlines.Add(new System.Windows.Controls.Image()
+            {
+                Source = GenerateImage(TextBox1),
+                Height = 80,
+                Width = 120,
+                Margin = new Thickness(2, 0, 0, 0),
+                Stretch = Stretch.UniformToFill
+            });
+            tb.Inlines.Add(new LineBreak());
+            tb.Inlines.Add(new Label()
+            {
+                Margin = new Thickness(7, 0, 0, 0),
+                Content = LPTED.GetTitle(NowPage)
+            });
+        }
+        /// <summary>
+        /// 重新生成左面板全部内容
+        /// </summary>
+        public void RefreshLeftPanelAll()
+        {
             //清空全部左窗体
             LeftPanel.Children.Clear();
             Button bt; TextBlock tb;
@@ -104,15 +147,6 @@ namespace LineputPlus
                 bt.Click += Bt_Click;
                 LeftPanel.Children.Add(bt);
             }
-            //给设置页面加上
-            TextBoxFirstLineOtherInfo.Text = LPTED.FirstLineOtherInfo;
-            ButtonOAFontColor.Background = new SolidColorBrush(LPTED.OADisplay.FontColor);
-            ButtonOABackGroundColor.Background = new SolidColorBrush(LPTED.OADisplay.BackColor);
-            ButtonOAFontFamily.Content = "字体:" + LPTED.OADisplay.FontFamily.ToString();
-            ComboBoxOAFontSize.Text = LPTED.OADisplay.FontSize.ToString("f1");
-
-            NowPage = 0;
-            LPTED.DisplaySource(NowPage);
         }
 
         /// <summary>
@@ -198,6 +232,7 @@ namespace LineputPlus
             /// </summary>
             public List<LpsDocument> EachPage = new List<LpsDocument>();
 
+            //Todo:修复默认字体颜色显示问题;可能是displaysource或者是Textbox1的默认字体设置错误
             /// <summary>
             /// 显示某一页的内容(lpt=>flowdocument
             /// </summary>
@@ -212,6 +247,7 @@ namespace LineputPlus
                     DisplayLine(lin, Document.Document, OADisplay,ref IADisplay);
                 }
             }
+            //Todo:提高显示样本精确度
             /// <summary>
             /// 显示图片(不精确
             /// </summary>
@@ -386,7 +422,7 @@ namespace LineputPlus
                 Sub[] v = IADisplay.ToSubs(OADisplay);
                 if (v.Length != 0)
                     EachPage[Page].AddLine(new Line("IAdisplay", "", "", v));
-                EachPage[Page] = LineDisplay.LineDisplaysToLpsDocument(LineDisplay.SimplifyLineDisplays(LineDisplay.XamlToLPT(Document.Document, OADisplay)));
+                EachPage[Page] = LineDisplay.LineDisplaysToLpsDocument(LineDisplay.SimplifyLineDisplays(LineDisplay.XamlToLPT(Document.Document, IADisplay)), IADisplay);
             }
             /// <summary>
             /// 将编辑内容转换成标准lps,可以直接使用
