@@ -77,9 +77,11 @@ namespace LineputPlus
             //显示左面板内容
             RefreshLeftPanelAll();
             //给设置页面加上
+
             TextBoxFirstLineOtherInfo.Text = LPTED.FirstLineOtherInfo;
             ButtonOAFontColor.Background = new SolidColorBrush(LPTED.OADisplay.FontColor);
             TextBox1.Foreground = new SolidColorBrush(LPTED.OADisplay.FontColor);
+            TextBox1.Background = new SolidColorBrush(LPTED.OADisplay.BackColor);
             ButtonOABackGroundColor.Background = new SolidColorBrush(LPTED.OADisplay.BackColor);
             ButtonOAFontFamily.Content = "字体:" + LPTED.OADisplay.FontFamily.ToString();
             ComboBoxOAFontSize.Text = LPTED.OADisplay.FontSize.ToString("f1");
@@ -195,6 +197,13 @@ namespace LineputPlus
             if (cl == Colors.Red)
                 MessageBox.Show(context, context.Split('\n')[0]);
         }
+
+
+
+
+
+        private bool IsChange = false;
+
         public class LPTEditor : LptDocument
         {
             public RichTextBox Document;
@@ -242,10 +251,18 @@ namespace LineputPlus
                 Document.Document.Blocks.Clear();
                 Document.Background = new SolidColorBrush(OADisplay.BackColor);
                 IADisplay = new LineDisplay(OADisplay);//清空旧的IA
+
+                Document.Document.Foreground = new SolidColorBrush(OADisplay.FontColor);
+                Document.Document.Background = new SolidColorBrush(OADisplay.BackColor);
+
+
                 foreach (Line lin in EachPage[Page])
                 {
-                    DisplayLine(lin, Document.Document, OADisplay,ref IADisplay);
+                    DisplayLine(lin, Document.Document,IADisplay);
                 }
+                //清空Undo
+                Document.IsUndoEnabled = false;
+                Document.IsUndoEnabled = true;
             }
             //Todo:提高显示样本精确度
             /// <summary>

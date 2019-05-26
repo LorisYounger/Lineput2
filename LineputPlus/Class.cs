@@ -484,8 +484,8 @@ namespace LineputPlus
                     MessageBox.Show(element.Name);
                 }
                 //清空多余的回车
-                lps.Last().OutPut = lps.Last().OutPut.TrimEnd('\n');
             }
+            lps.Last().OutPut = lps.Last().OutPut.TrimEnd('\n');
             return lps.ToArray();
         }
         /// <summary>
@@ -731,7 +731,7 @@ namespace LineputPlus
         /// </summary>
         /// <param name="line">哪一行的内容是</param>
         /// <param name="fd">要被显示的文档</param>
-        public static void DisplayLine(Line line, FlowDocument fd, LineDisplay OAld, ref LineDisplay IAld)
+        public static void DisplayLine(Line line, FlowDocument fd, LineDisplay IAld)
         {
             //Note:
             //pageend等指令插入使用|pageend:|
@@ -739,7 +739,7 @@ namespace LineputPlus
             line = new Line(line);//复制一个Line//(不会更改提供的内容)
             line.InsertSub(0, line);//Line将会被加进去,以至于可以直接在遍历中找到Line.Name+info
                                     //输出的这一行将会用什么
-            LineDisplay disThis = new LineDisplay(OAld);
+            LineDisplay disThis = new LineDisplay(IAld);
             //IAld = new LineDisplay(OAld);//不new 在外部完成 毕竟不止有一个line
             //区别:OA=全局,不会更变 IA=局部,会被更改
 
@@ -756,7 +756,7 @@ namespace LineputPlus
                     //    break;
                     case "pageend":
                     case "end":
-                        Output(new LineDisplay(OAld) { OutPut = $"|{sub.Name.ToLower()}:|" }, fd);
+                        Output(new LineDisplay(IAld) { OutPut = $"|{sub.Name.ToLower()}:|" }, fd);
                         break;
                     case "shell":
                     case "goto":
@@ -764,7 +764,7 @@ namespace LineputPlus
                     case "open":
                     case "mov":
                     case "msg":
-                        Output(new LineDisplay(OAld) { OutPut = $"|{sub.Name.ToLower()}#{sub.info}:|" }, fd);
+                        Output(new LineDisplay(IAld) { OutPut = $"|{sub.Name.ToLower()}#{sub.info}:|" }, fd);
                         break;
 
 
@@ -789,6 +789,7 @@ namespace LineputPlus
                         {
                             disThis.FontFamily = new FontFamily(sub.Info);
                             IAld.FontFamily = disThis.FontFamily;
+                            fd.FontFamily = disThis.FontFamily;
                         }
                         break;
                     case "fontcolor":
@@ -810,6 +811,7 @@ namespace LineputPlus
                         {
                             disThis.FontColor = HTMLToColor(sub.info);
                             IAld.FontColor = disThis.FontColor;
+                            fd.Foreground = new SolidColorBrush(disThis.FontColor);
                         }
                         break;
                     case "fontsize":
@@ -861,6 +863,8 @@ namespace LineputPlus
                         }
                         else
                         {
+                            disThis.BackColor = HTMLToColor(sub.info);
+                            IAld.BackColor = disThis.BackColor;
                             fd.Background = new SolidColorBrush(HTMLToColor(sub.info));
                         }
                         break;
@@ -913,7 +917,7 @@ namespace LineputPlus
 
                     default:
                         //支持行内其他代码,为以后的支持插件做准备
-                        Output(new LineDisplay(OAld) { OutPut = '|' + sub.ToString() }, fd);
+                        Output(new LineDisplay(IAld) { OutPut = '|' + sub.ToString() }, fd);
                         break;
                 }
             }
@@ -947,7 +951,7 @@ namespace LineputPlus
             {
                 if (fd.Blocks.Count != 0 && fd.Blocks.LastBlock.GetType().ToString() == "System.Windows.Documents.Paragraph")
                 {
-                    ((Paragraph)fd.Blocks.LastBlock).Inlines.Add(disThis.OutPutRun(OAld));
+                    ((Paragraph)fd.Blocks.LastBlock).Inlines.Add(disThis.OutPutRun());//OutPutRun\Prargraph 真的没有用?emm
                 }
                 else
                 {

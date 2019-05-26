@@ -34,6 +34,13 @@ namespace LineputPlus
         {
             OpenFileDialog openfile = new OpenFileDialog();
             openfile.Filter = "LPT 文件|*.lpt";
+            //Todo:不同功能的后缀
+            // lpt:Lineput文档
+            // lps:单页文档,可以插入进lpt(从切换
+            // txt:插入文本 从(哪里空着放哪里/最好搞成'插入'在编辑
+            // jpg,jpge,png,gif,..:插入图片
+            // lptd:打开后直接反映，不进行编辑
+            // html:网页(如果有能力就做带切换的(试试js
             if (openfile.ShowDialog() == true)
             {
                 OpenFile(openfile.FileName);
@@ -123,7 +130,7 @@ namespace LineputPlus
                 LPTED.OADisplay.BackColor = ColorConvent(cd.Color);
                 ButtonOABackGroundColor.Background = new SolidColorBrush(LPTED.OADisplay.BackColor);
                 LPTED.DisplaySource(NowPage);//重新加载
-                 //重新绘制全部图片
+                                             //重新绘制全部图片
                 RefreshLeftPanelAll();
             }
             //储存自定义颜色
@@ -184,7 +191,7 @@ namespace LineputPlus
         {
             if (!float.TryParse(ComboBoxOAFontSize.Text, out float fsize))
             {
-                MessageBox.Show("请输入数字","设置字体大小");
+                MessageBox.Show("请输入数字", "设置字体大小");
                 return;
             }
             if (LPTED.OADisplay.FontSize.ToString("f1") != fsize.ToString("f1"))
@@ -195,11 +202,10 @@ namespace LineputPlus
                 LPTED.OADisplay.FontSize = fsize;
 
                 LPTED.DisplaySource(NowPage);//重新加载
-                 //重新绘制全部图片
+                                             //重新绘制全部图片
                 RefreshLeftPanelAll();
             }
         }
-
         //Todo:TextBox清空撤回
         //Todo:IA的应用于更改(在切换栏
     }

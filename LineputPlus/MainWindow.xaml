@@ -36,6 +36,11 @@
 
             <Viewbox>
                 <RichTextBox x:Name="TextBox1" Margin="2" Background="#FF444444" VerticalScrollBarVisibility="Auto" Width="600" Height="400" Foreground="White">
+                    <RichTextBox.Resources>
+                        <Style TargetType="{x:Type Paragraph}">
+                            <Setter Property="Margin" Value="0"/>
+                        </Style>
+                    </RichTextBox.Resources>
                     <FlowDocument>
                         <Paragraph>
                             <Run Text="/欢迎使用LinePut"/>
