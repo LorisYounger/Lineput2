@@ -81,7 +81,7 @@
                                 <Label Margin="0,-3" Content="打开"/>
                             </InlineUIContainer></TextBlock>
                     </Button>
-                    <Button HorizontalAlignment="Left" Margin="150,8,0,0" VerticalAlignment="Top" Width="75" Height="60">
+                    <Button x:Name="ButtonSave" HorizontalAlignment="Left" Margin="150,8,0,0" VerticalAlignment="Top" Width="75" Height="60" Click="ButtonSave_Click">
                         <Button.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="7"/>
@@ -95,8 +95,16 @@
                             </InlineUIContainer></TextBlock>
                     </Button>
                     <Label HorizontalAlignment="Left" Margin="234,6,0,0" VerticalAlignment="Top" Content="全局设置  |" />
-                    <Label HorizontalAlignment="Left" Margin="234,38,0,0" VerticalAlignment="Top" Content="附加参数" />
-                    <TextBox x:Name="TextBoxFirstLineOtherInfo" HorizontalAlignment="Left" Height="23" Margin="313,43,0,0" TextWrapping="Wrap" Text="Author#UserName:|" VerticalAlignment="Top" Width="445" MouseDoubleClick="TabControl_MouseDoubleClick">
+                    <Button x:Name="ButtonSaveAS"  HorizontalAlignment="Left" Margin="239,42,0,0" VerticalAlignment="Top" Content="另存为" Width="75" Click="ButtonSaveAS_Click">
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="7"/>
+                                <Setter Property="BorderBrush" Value="#c1d0dc"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Label HorizontalAlignment="Left" Margin="336,38,0,0" VerticalAlignment="Top" Content="附加参数" />
+                    <TextBox x:Name="TextBoxFirstLineOtherInfo" HorizontalAlignment="Left" Height="23" Margin="413,43,0,0" TextWrapping="Wrap" Text="Author#UserName:|" VerticalAlignment="Top" Width="345" MouseDoubleClick="TabControl_MouseDoubleClick">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="4"/>
@@ -105,7 +113,7 @@
                         </TextBox.Resources>
                     </TextBox>
                     <CheckBox x:Name="ButtonOABackGroundColor" Content="背景颜色" HorizontalAlignment="Left" Margin="321,12,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" MouseDoubleClick="TabControl_MouseDoubleClick" Background="#FF444444" Click="ButtonOABackGroundColor_Click"/>
-                    <CheckBox x:Name="ButtonOAFontColor" Content="字体颜色" HorizontalAlignment="Left" Margin="413,12,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" MouseDoubleClick="TabControl_MouseDoubleClick" Background="White"/>
+                    <CheckBox x:Name="ButtonOAFontColor" Content="字体颜色" HorizontalAlignment="Left" Margin="413,12,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" MouseDoubleClick="TabControl_MouseDoubleClick" Background="White" Click="ButtonOAFontColor_Click"/>
                     <Button x:Name="ButtonOAFontFamily" Content="字体:Microsoft YaHei UI" HorizontalAlignment="Left" Margin="507,14,0,0" VerticalAlignment="Top" Width="120" FontSize="9" Click="ButtonOAFontFamily_Click"/>
                     <Label Content="字体大小" HorizontalAlignment="Left" Margin="628,6,0,0" VerticalAlignment="Top"/>
                     <ComboBox x:Name="ComboBoxOAFontSize" HorizontalAlignment="Left" Margin="699,8,0,0" VerticalAlignment="Top" Width="58" IsEditable="True" SelectedIndex="2" LostFocus="ComboBoxOAFontSize_LostFocus" PreviewKeyDown="ComboBoxOAFontSize_PreviewKeyDown" DropDownClosed="ComboBoxOAFontSize_DropDownClosed">

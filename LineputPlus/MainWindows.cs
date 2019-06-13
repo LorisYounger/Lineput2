@@ -12,6 +12,7 @@ using System.Drawing;
 using System.IO;
 using Color = System.Windows.Media.Color;
 using FontFamily = System.Windows.Media.FontFamily;
+using System.Text;
 
 namespace LineputPlus
 {
@@ -28,6 +29,10 @@ namespace LineputPlus
         /// 当前页面
         /// </summary>
         public int NowPage;
+        /// <summary>
+        /// 文件储存位置
+        /// </summary>
+        public string FilePath ="";
         public MainWindow()
         {
             InitializeComponent();
@@ -55,15 +60,20 @@ namespace LineputPlus
         }
         public void OpenFile(string path)
         {
+            FilePath = path;
             FileInfo openfile = new FileInfo(path);
             if (!openfile.Exists) { openfile = new FileInfo(Environment.CurrentDirectory + '\\' + path); }
             if (!openfile.Exists) { openfile = new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + '\\' + path); }
             if (!openfile.Exists) { OutPut($"找不到文件:{path}\n", Colors.Red); return; }
-            StreamReader sr;
-            sr = new StreamReader(openfile.OpenRead(), System.Text.Encoding.Default);
-            OutPut($"文件{ path }已打开\n", Colors.Orange);
-            string str = sr.ReadToEnd();
-            sr.Dispose();
+
+            FileStream fs = openfile.OpenRead();
+            byte[] buff = new byte[fs.Length];
+            fs.Read(buff, 0, (int)fs.Length);
+            fs.Dispose();
+
+            string str = BytesToString(buff);
+
+            OutPut($"文件{ path }已打开\n", Colors.Orange);   
             OpenLPT(str);
             //版本检查
             if (LPTED.Verison.Contains("1.") || LPTED.Verison == "-1")
@@ -73,6 +83,8 @@ namespace LineputPlus
         }
         public void OpenLPT(string lpt)
         {
+            IsChange = false;
+
             LPTED = new LPTEditor(TextBox1, lpt);
             //显示左面板内容
             RefreshLeftPanelAll();
@@ -89,6 +101,27 @@ namespace LineputPlus
             NowPage = 0;
             LPTED.DisplaySource(NowPage);
         }
+        public void Save(string path)
+        {
+            //先保存当前正在编辑的文档
+            LPTED.SavePage(NowPage);
+            //将page内容储存到lpt
+            LPTED.Save();
+            try
+            {
+                FileInfo fi = new FileInfo(path);
+                FileStream fs = fi.Create();
+                byte[] buff = Encoding.UTF8.GetBytes(LPTED.ToString());
+                fs.Write(buff, 0, buff.Length);
+                fs.Close();
+                fs.Dispose();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"发生于:{e.Source}\n异常:{e.Message}","保存错误:文件写入失败");
+            }
+        }
+       
         /// <summary>
         /// 刷新当前页面的左侧窗体，并用截图代替生成图片
         /// </summary>
@@ -201,7 +234,9 @@ namespace LineputPlus
 
 
 
-
+        /// <summary>
+        /// 判断是否经过保存 如果没有需要提醒是否保存
+        /// </summary>
         private bool IsChange = false;
 
         public class LPTEditor : LptDocument
@@ -258,7 +293,7 @@ namespace LineputPlus
 
                 foreach (Line lin in EachPage[Page])
                 {
-                    DisplayLine(lin, Document.Document,IADisplay);
+                    DisplayLine(lin, Document.Document, IADisplay);
                 }
                 //清空Undo
                 Document.IsUndoEnabled = false;
@@ -373,14 +408,14 @@ namespace LineputPlus
                         }
                     }
 
-                    g1.DrawString(nu.Text, new Font(disThis.FontFamily.ToString(), disThis.FontSize / 2), new SolidBrush(ColorConvent(disThis.FontColor)), 0, y);
+                    g1.DrawString(nu.Text, new Font(disThis.FontFamily.ToString(), disThis.FontSize / 2), new SolidBrush(ColorConvent(disThis.FontColor)), x, y);
                     if (nu.Text.Contains('\n'))
                     {
                         x = 0;
-                        y += Convert.ToInt16(disThis.FontSize / 2 * (nu.Text.Split('\n').Length) - 1);
+                        y += Convert.ToInt16(disThis.FontSize / 2 * nu.Text.Split('\n').Length);
                     }
                     else
-                        x += Convert.ToInt16(disThis.FontSize / 2 * nu.text.Length);
+                        x += Convert.ToInt16(disThis.FontSize / 2.2 * nu.text.Length);//文本长度和宽度区别
 
                     if (y >= 250)
                         break;
@@ -450,11 +485,13 @@ namespace LineputPlus
                 Line fl = new Line("LinePut:|ver#" + Verison + ":|" + FirstLineOtherInfo);
                 fl.AddRange(OADisplay.ToSubs());
                 Assemblage.Add(fl);
-                foreach (LptDocument lpt in EachPage)
+                foreach (LpsDocument lpt in EachPage)
                 {
                     Assemblage.AddRange(lpt.Assemblage);
                     Assemblage.Add(new Line("cls:|"));//加入cls分页符号到每一行
                 }
+                if (Assemblage.Count > 1)//注:最后一行不需要加分页符号
+                    Assemblage.RemoveAt(Assemblage.Count - 1);
             }
         }
 

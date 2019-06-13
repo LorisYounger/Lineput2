@@ -79,6 +79,88 @@ namespace LineputPlus
                 return vi;
             }
         }
+
+        /// <summary>
+        /// 自动判断文档(bytes)使用的编码
+        /// </summary>
+        /// <param name="buff">文档源数据</param>
+        /// <returns></returns>
+        public static Encoding DetectEncoding(byte[] buff)
+        {
+            if (buff == null || buff.Length < 2)
+                return Encoding.Default;      // Default fallback
+
+            if (IsUTF8Bytes(buff) || (buff[0] == 0xEF && buff[1] == 0xBB && buff[2] == 0xBF))
+            {
+                return Encoding.UTF8;
+            }
+            else if (buff[0] == 0xFE && buff[1] == 0xFF && buff[2] == 0x00)
+            {
+                return Encoding.BigEndianUnicode;
+            }
+            else if (buff[0] == 0xFF && buff[1] == 0xFE && buff[2] == 0x41)
+            {
+                return Encoding.Unicode;
+            }
+            return Encoding.Default;
+
+        }
+        /// <summary> 
+        /// 判断是否是不带 BOM 的 UTF8 格式 
+        /// </summary> 
+        /// <param name="buff">文档源数据</param> 
+        /// <returns></returns> 
+        private static bool IsUTF8Bytes(byte[] buff)
+        {
+            int charByteCounter = 1; //计算当前正分析的字符应还有的字节数 
+            byte curByte; //当前分析的字节. 
+            for (int i = 0; i < buff.Length; i++)
+            {
+                curByte = buff[i];
+                if (charByteCounter == 1)
+                {
+                    if (curByte >= 0x80)
+                    {
+                        //判断当前 
+                        while (((curByte <<= 1) & 0x80) != 0)
+                        {
+                            charByteCounter++;
+                        }
+                        //标记位首位若为非0 则至少以2个1开始 如:110XXXXX...........1111110X 
+                        if (charByteCounter == 1 || charByteCounter > 6)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    //若是UTF-8 此时第一位必须为1 
+                    if ((curByte & 0xC0) != 0x80)
+                    {
+                        return false;
+                    }
+                    charByteCounter--;
+                }
+            }
+            if (charByteCounter > 1)
+            {
+                throw new Exception("非预期的byte格式");
+            }
+            return true;
+        }
+
+
+        /// <summary>
+        /// 将文档(bytes)转换成文档(string)
+        /// </summary>
+        /// <param name="fileContent">文档源数据</param>
+        /// <returns></returns>
+        public static string BytesToString(byte[] fileContent)
+        {
+            Encoding edi = DetectEncoding(fileContent);
+            return edi.GetString(fileContent);
+        }
     }
 
     /// <summary>
@@ -485,7 +567,8 @@ namespace LineputPlus
                 }
                 //清空多余的回车
             }
-            lps.Last().OutPut = lps.Last().OutPut.TrimEnd('\n');
+            if (lps.Count != 0)//空的退回空
+                lps.Last().OutPut = lps.Last().OutPut.TrimEnd('\n');
             return lps.ToArray();
         }
         /// <summary>
@@ -666,6 +749,44 @@ namespace LineputPlus
                         }
                         break;
 
+                    case "font":
+                    case "fontfamily":
+                    case "allfontfamily":
+                        if (sub.info == null)
+                        {
+                            //log.Append(sub.Name + ":未找到颜色记录\n");
+                        }
+                        else
+                        {
+                            OADisplay.FontFamily =new FontFamily(sub.info);
+                        }
+                        break;
+
+                    case "u":
+                    case "underline":
+                        OADisplay.Underline = true; break;
+                    case "b":
+                    case "bold":
+                        OADisplay.Bold =true; break;
+                    case "i":
+                    case "italic":
+                        OADisplay.Italic = true; break;
+                    case "d":
+                    case "deleteline":
+                        OADisplay.Strikethrough = true; break;
+                    case "l":
+                    case "left":
+                        OADisplay.Alignment = TextAlignment.Left; break;
+                    case "r":
+                    case "right":
+                        OADisplay.Alignment = TextAlignment.Right; break;
+                    case "c":
+                    case "center":
+                        OADisplay.Alignment = TextAlignment.Center; break;
+                    case "j":
+                    case "justify":
+                        OADisplay.Alignment = TextAlignment.Justify; break;
+
 
                     case "ver":
                     case "verizon":
@@ -675,18 +796,6 @@ namespace LineputPlus
                         }
                         break;
 
-                    case "u":
-                        OADisplay.Underline = true; break;
-                    case "b":
-                        OADisplay.Bold = true; break;
-                    case "i":
-                        OADisplay.Italic = true; break;
-                    case "d":
-                        OADisplay.Strikethrough = true; break;
-                    case "":
-
-
-                        break;
                     default:
                         FirstLineOtherInfo += $"{sub.Name}#{sub.info}:|";
                         break;

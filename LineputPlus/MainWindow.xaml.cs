@@ -1,27 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Linq;
-using LinePutScript;
-using System.Windows.Documents;
-using Microsoft.Win32;
 using static LineputPlus.Main;
 using System.Drawing;
-using System.IO;
-using Color = System.Windows.Media.Color;
 using FontFamily = System.Windows.Media.FontFamily;
 using System.Windows.Forms;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using Button = System.Windows.Controls.Button;
 using RichTextBox = System.Windows.Controls.RichTextBox;
-using Label = System.Windows.Controls.Label;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using MessageBox = System.Windows.MessageBox;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace LineputPlus
 {
@@ -136,9 +126,9 @@ namespace LineputPlus
             //储存自定义颜色
             CustomColors = cd.CustomColors;
         }
-
         private void ButtonOAFontColor_Click(object sender, RoutedEventArgs e)
         {
+
             ButtonOAFontColor.IsChecked = false;
             ColorDialog cd = new ColorDialog();
             cd.CustomColors = CustomColors;
@@ -205,7 +195,43 @@ namespace LineputPlus
                                              //重新绘制全部图片
                 RefreshLeftPanelAll();
             }
+        }     
+
+        private void ButtonSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (FilePath == "")
+            {
+                SaveFileDialog savefile = new SaveFileDialog();
+                savefile.Filter = "LPT 文件|*.lpt";
+                //Todo:不同功能的后缀
+                if (savefile.ShowDialog() == true)
+                {
+                    FilePath = savefile.FileName;
+                    Save(savefile.FileName);
+                }
+                else
+                    return;
+            }
+            else
+                Save(FilePath);
+            IsChange = false;
         }
+
+        private void ButtonSaveAS_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog savefile = new SaveFileDialog();
+            savefile.Filter = "LPT 文件|*.lpt";
+            //Todo:不同功能的后缀
+            if (savefile.ShowDialog() == true)
+            {
+                Save(savefile.FileName);
+                FilePath = savefile.FileName;
+                IsChange = false;
+            }
+            else
+                return;
+        }
+               
         //Todo:TextBox清空撤回
         //Todo:IA的应用于更改(在切换栏
     }
