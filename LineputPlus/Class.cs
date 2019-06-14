@@ -21,7 +21,7 @@ namespace LineputPlus
 {
     public static class Main
     {
-        public static readonly string verison = "alpha 2";
+        public static readonly string verison = "2.0";
         public static string[] args;
         public static string ColorToHTML(Color Color)
         {

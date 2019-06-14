@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:LineputPlus"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Lineput" Height="600" Width="800" WindowStartupLocation="CenterScreen" Icon="Lineput.ico" MinHeight="500" MinWidth="600">
+        Title="Lineput" Height="600" Width="800" WindowStartupLocation="CenterScreen" Icon="Lineput.ico" MinHeight="500" MinWidth="600" Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150"/>
@@ -35,7 +35,7 @@
             </Grid.Background>
 
             <Viewbox>
-                <RichTextBox x:Name="TextBox1" Margin="2" Background="#FF444444" VerticalScrollBarVisibility="Auto" Width="600" Height="400" Foreground="White">
+                <RichTextBox x:Name="TextBox1" Margin="2" Background="#FF444444" VerticalScrollBarVisibility="Auto" Width="600" Height="400" Foreground="White" KeyDown="TextBox1_KeyDown">
                     <RichTextBox.Resources>
                         <Style TargetType="{x:Type Paragraph}">
                             <Setter Property="Margin" Value="0"/>
@@ -55,7 +55,7 @@
         <TabControl Grid.Row="0" Grid.Column="0" x:Name="ToolBar" VerticalAlignment="Top" FontSize="16" ScrollViewer.CanContentScroll="True" MouseDoubleClick="TabControl_MouseDoubleClick" MouseLeave="ToolBar_MouseLeave" MouseEnter="ToolBar_MouseEnter" Background="SkyBlue" Grid.ColumnSpan="2">
             <TabItem Header=" 文件 ">
                 <Grid Background="WhiteSmoke" ScrollViewer.CanContentScroll="True" Height="78">
-                    <Button HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Width="125" Height="26">
+                    <Button x:Name="ButtonCreateFile" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Width="125" Height="26" Click="ButtonCreateFile_Click">
                         <Button.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="7"/>

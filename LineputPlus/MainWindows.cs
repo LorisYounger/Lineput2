@@ -32,7 +32,19 @@ namespace LineputPlus
         /// <summary>
         /// 文件储存位置
         /// </summary>
-        public string FilePath ="";
+        public string FilePath
+        {
+            get => filepath;
+            set
+            {
+                filepath = value;
+                FileName = filepath.Split('\\').Last();
+                Title = "Lineput - " + FileName;
+            }
+        }
+        private string filepath = "";
+        public string FileName = "";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -46,7 +58,7 @@ namespace LineputPlus
                 switch (args.Length)
                 {
                     case 0:
-                        OpenLPT("LPT#Origin:|ver#2:|Author#UserName:|\nh3:|欢迎使用Lineput");
+                        OpenNew();
                         break;
                     case 1:
                         OpenFile(args[0]);
@@ -73,12 +85,16 @@ namespace LineputPlus
 
             string str = BytesToString(buff);
 
-            OutPut($"文件{ path }已打开\n", Colors.Orange);   
+            OutPut($"文件{ path }已打开\n", Colors.Orange);
             OpenLPT(str);
             //版本检查
-            if (LPTED.Verison.Contains("1.") || LPTED.Verison == "-1")
+            if (LPTED.Verison.StartsWith("1.") || LPTED.Verison == "-1")
             {
                 OutPut("文件版本过旧,可能不兼容或部分弃用功能无法使用\n", Colors.Red);
+            }
+            else if (!LPTED.Verison.StartsWith(verison))
+            {
+                OutPut("文件版本高于当前版本,可能不支持新功能,请更新本软件\n", Colors.Red);
             }
         }
         public void OpenLPT(string lpt)
@@ -118,10 +134,21 @@ namespace LineputPlus
             }
             catch (Exception e)
             {
-                MessageBox.Show($"发生于:{e.Source}\n异常:{e.Message}","保存错误:文件写入失败");
+                MessageBox.Show($"发生于:{e.Source}\n异常:{e.Message}", "保存错误:文件写入失败");
             }
         }
-       
+
+        /// <summary>
+        /// 创建一个新的lpt文档
+        /// </summary>
+        public void OpenNew()
+        {
+            filepath = "";
+            FileName = "新文件";
+            OpenLPT("LPT#Origin:|ver#2:|Author#UserName:|\nh3:|欢迎使用Lineput");
+        }
+
+
         /// <summary>
         /// 刷新当前页面的左侧窗体，并用截图代替生成图片
         /// </summary>
@@ -482,7 +509,7 @@ namespace LineputPlus
             public void Save()
             {
                 Assemblage.Clear();
-                Line fl = new Line("LinePut:|ver#" + Verison + ":|" + FirstLineOtherInfo);
+                Line fl = new Line("LinePut:|ver#" + verison + ":|" + FirstLineOtherInfo);
                 fl.AddRange(OADisplay.ToSubs());
                 Assemblage.Add(fl);
                 foreach (LpsDocument lpt in EachPage)

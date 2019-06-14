@@ -20,6 +20,28 @@ namespace LineputPlus
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        public bool Save(bool SaveAs = false)
+        {
+            if (SaveAs || FilePath == "")
+            {
+                SaveFileDialog savefile = new SaveFileDialog();
+                savefile.Filter = "LPT 文件|*.lpt";
+                //Todo:不同功能的后缀
+                if (savefile.ShowDialog() == true)
+                {
+                    FilePath = savefile.FileName;
+                    Save(savefile.FileName);                    
+                }
+                else
+                    return false;
+            }
+            else
+                Save(FilePath);
+            IsChange = false;
+            return true;
+        }
+
         private void ButtonOpen_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openfile = new OpenFileDialog();
@@ -195,43 +217,58 @@ namespace LineputPlus
                                              //重新绘制全部图片
                 RefreshLeftPanelAll();
             }
-        }     
+        }
 
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
-            if (FilePath == "")
-            {
-                SaveFileDialog savefile = new SaveFileDialog();
-                savefile.Filter = "LPT 文件|*.lpt";
-                //Todo:不同功能的后缀
-                if (savefile.ShowDialog() == true)
-                {
-                    FilePath = savefile.FileName;
-                    Save(savefile.FileName);
-                }
-                else
-                    return;
-            }
-            else
-                Save(FilePath);
-            IsChange = false;
+            Save();
         }
-
+        
         private void ButtonSaveAS_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog savefile = new SaveFileDialog();
-            savefile.Filter = "LPT 文件|*.lpt";
-            //Todo:不同功能的后缀
-            if (savefile.ShowDialog() == true)
-            {
-                Save(savefile.FileName);
-                FilePath = savefile.FileName;
-                IsChange = false;
-            }
-            else
-                return;
+            Save(true);
         }
-               
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //关闭前进行判断
+            if (IsChange)
+            {
+                switch (MessageBox.Show($"是否保存对文件 \"{FileName}\" 的修改", "正在编辑的文件", MessageBoxButton.YesNoCancel))
+                {
+                    case MessageBoxResult.Yes:
+                        if (!Save())
+                            e.Cancel = true;
+                        break;
+                    case MessageBoxResult.Cancel:
+                        e.Cancel = true;
+                        break;
+                 }
+            }
+        }
+
+        private void ButtonCreateFile_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsChange)
+            {
+                switch (MessageBox.Show($"是否保存对文件 \"{FileName}\" 的修改", "正在编辑的文件", MessageBoxButton.YesNoCancel))
+                {
+                    case MessageBoxResult.Yes:
+                        if (!Save())
+                            return;
+                        break;
+                    case MessageBoxResult.Cancel:
+                        return;
+                }
+            }
+            OpenNew();
+        }
+
+        private void TextBox1_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            IsChange = true;
+        }
+
         //Todo:TextBox清空撤回
         //Todo:IA的应用于更改(在切换栏
     }
