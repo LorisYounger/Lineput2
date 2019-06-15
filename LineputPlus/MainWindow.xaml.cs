@@ -77,6 +77,7 @@ namespace LineputPlus
 
             //跳转
             NowPage = chosepage;
+            MarkLeftPanelColor();
             LPTED.DisplaySource(NowPage);
         }
         bool AutoCloseToolBar = false;
@@ -167,7 +168,6 @@ namespace LineputPlus
             //储存自定义颜色
             CustomColors = cd.CustomColors;
         }
-        //Todo:修改全局需要将文档重新载入//可以只载入一个页面 其他的暂时不管了 (除了背景颜色要手动修改
         private void ButtonOAFontFamily_Click(object sender, RoutedEventArgs e)
         {
             FontDialog fd = new FontDialog();
@@ -269,7 +269,19 @@ namespace LineputPlus
             IsChange = true;
         }
 
-        //Todo:TextBox清空撤回
+        private void ButtonNewPage_Click(object sender, RoutedEventArgs e)
+        {
+            IsChange = true;
+            //先保存当前正在编辑的文档
+            LPTED.SavePage(NowPage);
+            NowPage++;
+
+            LPTED.EachPage.Insert(NowPage,new LinePutScript.LpsDocument());
+            RefreshLeftPanelAll();
+            MarkLeftPanelColor();
+            TextBox1.Document.Blocks.Clear();
+        }
+
         //Todo:IA的应用于更改(在切换栏
     }
 }

@@ -591,6 +591,10 @@ namespace LineputPlus
                         switch (atr.Name)
                         {
                             case "":
+                            case "Margin":
+                            case "xml:lang":
+                                //弃用的参数
+                                break;
                             default:
                                 MessageBox.Show(atr.Name);
                                 break;

@@ -116,6 +116,7 @@ namespace LineputPlus
 
             NowPage = 0;
             LPTED.DisplaySource(NowPage);
+            MarkLeftPanelColor();
         }
         public void Save(string path)
         {
@@ -143,9 +144,12 @@ namespace LineputPlus
         /// </summary>
         public void OpenNew()
         {
+            IsChange = false;
             filepath = "";
             FileName = "新文件";
+            Title = "Lineput - 新文件";            
             OpenLPT("LPT#Origin:|ver#2:|Author#UserName:|\nh3:|欢迎使用Lineput");
+            MarkLeftPanelColor();
         }
 
 
@@ -173,6 +177,17 @@ namespace LineputPlus
                 Margin = new Thickness(7, 0, 0, 0),
                 Content = LPTED.GetTitle(NowPage)
             });
+        }
+        /// <summary>
+        /// 标注左侧窗体颜色
+        /// </summary>
+        public void MarkLeftPanelColor()
+        {
+            foreach(UIElement uie in LeftPanel.Children)
+            {
+                ((Button)uie).Background = new SolidColorBrush(Color.FromRgb(224, 224, 224));
+            }
+            ((Button)LeftPanel.Children[NowPage]).Background = new SolidColorBrush(Color.FromRgb(204, 213, 240));
         }
         /// <summary>
         /// 重新生成左面板全部内容
@@ -303,7 +318,6 @@ namespace LineputPlus
             /// </summary>
             public List<LpsDocument> EachPage = new List<LpsDocument>();
 
-            //Todo:修复默认字体颜色显示问题;可能是displaysource或者是Textbox1的默认字体设置错误
             /// <summary>
             /// 显示某一页的内容(lpt=>flowdocument
             /// </summary>

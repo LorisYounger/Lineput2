@@ -63,7 +63,7 @@
                             </Style>
                         </Button.Resources>
                         <TextBlock><InlineUIContainer>
-                                <Image Source="Resources/ic_add_box_black_24dp.png" Width="24"/>
+                                <Image Source="Resources/ic_description_black_24dp.png" Width="24"/>
                             </InlineUIContainer><Run Text=" "/><InlineUIContainer>
                                 <Label Margin="0,-3" Content="新建"/>
                             </InlineUIContainer></TextBlock>
@@ -138,7 +138,7 @@
             <TabItem Header=" 切换 ">
                 <Grid Background="WhiteSmoke" Height="78">
 
-                    <Button HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Width="75" Height="60">
+                    <Button x:Name="ButtonNewPage" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top" Width="75" Height="60" Click="ButtonNewPage_Click">
                         <Button.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="7"/>
@@ -146,13 +146,13 @@
                             </Style>
                         </Button.Resources>
                         <TextBlock><InlineUIContainer>
-                                <Image Source="Resources/ic_add_to_photos_black_24dp.png" Width="24" Margin="22,0"/>
+                                <Image Source="Resources/ic_note_add_black_24dp.png" Width="24" Margin="22,0"/>
                             </InlineUIContainer><LineBreak/><InlineUIContainer>
                                 <Label Content="新建页" Margin="5,0,0,0"/>
                             </InlineUIContainer></TextBlock>
                     </Button>
                     <Label HorizontalAlignment="Left" Margin="234,38,0,0" VerticalAlignment="Top" Content="自动切换:" />
-                    <Button HorizontalAlignment="Left" Margin="100,8,0,0" VerticalAlignment="Top" Width="125" Height="26">
+                    <Button x:Name="ButtonInsertPage" HorizontalAlignment="Left" Margin="100,8,0,0" VerticalAlignment="Top" Width="125" Height="26">
                         <Button.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="7"/>
@@ -160,9 +160,9 @@
                             </Style>
                         </Button.Resources>
                         <TextBlock><InlineUIContainer>
-                                <Image Source="Resources/ic_add_box_black_24dp.png" Width="24"/>
+                                <Image Source="Resources/ic_insert_drive_file_black_24dp.png" Width="24"/>
                             </InlineUIContainer><Run Text=" "/><InlineUIContainer>
-                                <Label Margin="0,-3" Content="新建切换"/>
+                                <Label Margin="0,-3" Content="插入页面"/>
                             </InlineUIContainer></TextBlock>
                     </Button>
                     <Button HorizontalAlignment="Left" Margin="100,42,0,0" VerticalAlignment="Top" Width="125" Height="26">
@@ -173,9 +173,9 @@
                             </Style>
                         </Button.Resources>
                         <TextBlock><InlineUIContainer>
-                                <Image Source="Resources/ic_add_box_black_24dp.png" Width="24"/>
+                                <Image Source="Resources/ic_delete_black_24dp.png" Width="24"/>
                             </InlineUIContainer><Run Text=" "/><InlineUIContainer>
-                                <Label Margin="0,-3" Content="延时切换"/>
+                                <Label Margin="0,-3" Content="删除页面"/>
                             </InlineUIContainer></TextBlock>
                     </Button>
                 </Grid>
