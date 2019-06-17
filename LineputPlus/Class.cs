@@ -13,6 +13,7 @@ using System.Linq;
 using LinePutScript;
 using static LineputPlus.Main;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
 
 //Todo:
 //Timer:开始放映的时候回自动开始,显示在右侧
@@ -712,7 +713,7 @@ namespace LineputPlus
     {
         public LptDocument(string LPT) : base(LPT)
         {
-            foreach (Sub sub in this.First())
+            foreach (Sub sub in First())
             {
                 switch (sub.Name.ToLower())
                 {
@@ -762,7 +763,7 @@ namespace LineputPlus
                         }
                         else
                         {
-                            OADisplay.FontFamily =new FontFamily(sub.info);
+                            OADisplay.FontFamily = new FontFamily(sub.info);
                         }
                         break;
 
@@ -771,7 +772,7 @@ namespace LineputPlus
                         OADisplay.Underline = true; break;
                     case "b":
                     case "bold":
-                        OADisplay.Bold =true; break;
+                        OADisplay.Bold = true; break;
                     case "i":
                     case "italic":
                         OADisplay.Italic = true; break;
@@ -879,7 +880,6 @@ namespace LineputPlus
                     case "msg":
                         Output(new LineDisplay(IAld) { OutPut = $"|{sub.Name.ToLower()}#{sub.info}:|" }, fd);
                         break;
-
 
                     case "font":
                     case "fontfamily":
@@ -1029,7 +1029,7 @@ namespace LineputPlus
                         break;
 
                     default:
-                        //支持行内其他代码,为以后的支持插件做准备
+                        //支持行内其他代码,为以后的支持插件做准备 //ToDo:跳转(goto)做成官方内置插件 使用委托
                         Output(new LineDisplay(IAld) { OutPut = '|' + sub.ToString() }, fd);
                         break;
                 }
@@ -1047,6 +1047,8 @@ namespace LineputPlus
         /// <param name="OAld">全局,可不填</param>
         public static void Output(LineDisplay disThis, FlowDocument fd, LineDisplay OAld = null)
         {
+            if (disThis.OutPut == "")
+                return;
             //***一个比较有用的案例: (读取的时候也可以使用这个)
             //TextBox1.Document.Blocks.Add(new Paragraph(new Run("内容") { }))
             if (OAld == null)
@@ -1091,17 +1093,66 @@ namespace LineputPlus
             Reptex = Reptex.Replace("/com", ",");
             return Reptex;
         }
+        //Todo:完全弃用这个方法?转移到Player? 或从Player转移到这个
         /// <summary>
         /// 显示当前阅读行的//包括替换(演讲用)
         /// </summary>
         /// <param name="line">哪一行的内容是</param>
         /// <param name="fd">要被显示的文档</param>
-        public void DisplayLine(FlowDocument fd)
+        /// <param name="IAld">半全局变量 会随时更改</param>
+        /// <param name="dc">播放控制</param>
+        public void DisplayLine(Line line, FlowDocument fd, LineDisplay IAld, DisplayControl dc)//Todo:使用委托在Player实现特殊替换的等功能 这样player就不用担心
         {
             //ToDo
         }
 
+        /// <summary>
+        /// 控制显示委托 可用于插件,实现特殊功能等
+        /// </summary>
+        /// <param name="order">指令</param>
+        /// <param name="ldp">预备显示内容</param>
+        /// <param name="fd">流文档(输出端口</param>
+        public delegate void DisplayControl(Sub order, ref LineDisplay ldp, ref FlowDocument fd);
+
     }
 
+    /// <summary>
+    /// LPT播放器:Lineput内容
+    /// </summary>
+    public class LPTPlayer : LptDocument
+    {
+        public RichTextBox Document;
+        public LineDisplay IADisplay;
+        public LPTPlayer(RichTextBox fdm, string LPT, int start = 1) : base(LPT)
+        {
+            Document = fdm;
+            LineNode = start;
 
+        }
+        /// <summary>
+        /// 文本置换
+        /// </summary>
+        /// <param name="Reptex">原文本</param>
+        public void TextDeReplace(ref string Reptex)
+        {
+            Reptex = Reptex.Replace("/now", DateTime.Now.ToString());
+            Reptex = Reptex.Replace("/date", DateTime.Now.ToShortDateString());
+            Reptex = Reptex.Replace("/time", DateTime.Now.ToShortTimeString());
+        }
+        /// <summary>
+        /// 控制显示委托 可用于插件,实现特殊功能等
+        /// </summary>
+        /// <param name="order">指令</param>
+        /// <param name="ldp">预备显示内容</param>
+        /// <param name="fd">流文档(输出端口</param>
+        public void PlayDisplay(Sub order, ref LineDisplay ldp, ref FlowDocument fd)
+        {
+            TextDeReplace(ref ldp.OutPut);
+            switch (order.Name.ToLower())
+            {
+                case "":
+                    break;
+            }
+        }
+    }
 }

@@ -147,7 +147,7 @@ namespace LineputPlus
             IsChange = false;
             filepath = "";
             FileName = "新文件";
-            Title = "Lineput - 新文件";            
+            Title = "Lineput - 新文件";
             OpenLPT("LPT#Origin:|ver#2:|Author#UserName:|\nh3:|欢迎使用Lineput");
             MarkLeftPanelColor();
         }
@@ -183,7 +183,7 @@ namespace LineputPlus
         /// </summary>
         public void MarkLeftPanelColor()
         {
-            foreach(UIElement uie in LeftPanel.Children)
+            foreach (UIElement uie in LeftPanel.Children)
             {
                 ((Button)uie).Background = new SolidColorBrush(Color.FromRgb(224, 224, 224));
             }
@@ -311,12 +311,21 @@ namespace LineputPlus
                         EachPage.Last().AddLine(tmp);
                     }
                 }
-
+                EachPageid = new int[EachPage.Count];
+                EachPageid[0] = 1;
+                for (int i = 0; i < EachPage.Count - 1; i++)
+                {
+                    EachPageid[i + 1] = EachPageid[i] + EachPage[i].Assemblage.Count;
+                }
             }
             /// <summary>
             /// 每页的内容分别储存好 注:可能和源文件Assemblage不同步,使用Save进行同步
             /// </summary>
             public List<LpsDocument> EachPage = new List<LpsDocument>();
+            /// <summary>
+            /// 判断每一页的起始位置哪里 //可用于 展示从当前页开始,插入跳转
+            /// </summary>
+            public int[] EachPageid;
 
             /// <summary>
             /// 显示某一页的内容(lpt=>flowdocument
@@ -526,6 +535,7 @@ namespace LineputPlus
                 Line fl = new Line("LinePut:|ver#" + verison + ":|" + FirstLineOtherInfo);
                 fl.AddRange(OADisplay.ToSubs());
                 Assemblage.Add(fl);
+                
                 foreach (LpsDocument lpt in EachPage)
                 {
                     Assemblage.AddRange(lpt.Assemblage);
@@ -533,6 +543,14 @@ namespace LineputPlus
                 }
                 if (Assemblage.Count > 1)//注:最后一行不需要加分页符号
                     Assemblage.RemoveAt(Assemblage.Count - 1);
+
+                //保存后重新分页
+                EachPageid = new int[EachPage.Count];
+                EachPageid[0] = 1;
+                for (int i = 0; i < EachPage.Count - 1; i++)
+                {
+                    EachPageid[i + 1] = EachPageid[i] + EachPage[i].Assemblage.Count;
+                }
             }
         }
 

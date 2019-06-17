@@ -282,6 +282,38 @@ namespace LineputPlus
             TextBox1.Document.Blocks.Clear();
         }
 
+        private void ButtonInsertPage_Click(object sender, RoutedEventArgs e)
+        {
+            IsChange = true;
+            //先保存当前正在编辑的文档
+            LPTED.SavePage(NowPage);
+
+            LPTED.EachPage.Insert(NowPage, new LinePutScript.LpsDocument());
+            RefreshLeftPanelAll();
+            MarkLeftPanelColor();
+            TextBox1.Document.Blocks.Clear();
+        }
+
+        private void ButtonDeletePage_Click(object sender, RoutedEventArgs e)
+        {
+            if (LPTED.EachPage.Count == 1)
+            {
+                MessageBox.Show("最后一页面无法删除","删除失败");
+                return;
+            }
+            if (MessageBox.Show("确认删除该页面吗,此操作无法撤回","删除本页面",MessageBoxButton.YesNo)== MessageBoxResult.Yes)
+            {
+                
+                IsChange = true;
+                LPTED.EachPage.RemoveAt(NowPage);
+                if (NowPage >= LPTED.EachPage.Count)
+                    NowPage = LPTED.EachPage.Count - 1;
+                RefreshLeftPanelAll();
+                MarkLeftPanelColor();
+                LPTED.DisplaySource(NowPage);
+            }
+        }
+
         //Todo:IA的应用于更改(在切换栏
     }
 }

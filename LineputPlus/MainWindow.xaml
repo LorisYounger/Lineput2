@@ -152,7 +152,7 @@
                             </InlineUIContainer></TextBlock>
                     </Button>
                     <Label HorizontalAlignment="Left" Margin="234,38,0,0" VerticalAlignment="Top" Content="自动切换:" />
-                    <Button x:Name="ButtonInsertPage" HorizontalAlignment="Left" Margin="100,8,0,0" VerticalAlignment="Top" Width="125" Height="26">
+                    <Button x:Name="ButtonInsertPage" HorizontalAlignment="Left" Margin="100,8,0,0" VerticalAlignment="Top" Width="125" Height="26" Click="ButtonInsertPage_Click">
                         <Button.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="7"/>
@@ -165,7 +165,7 @@
                                 <Label Margin="0,-3" Content="插入页面"/>
                             </InlineUIContainer></TextBlock>
                     </Button>
-                    <Button HorizontalAlignment="Left" Margin="100,42,0,0" VerticalAlignment="Top" Width="125" Height="26">
+                    <Button x:Name="ButtonDeletePage" HorizontalAlignment="Left" Margin="100,42,0,0" VerticalAlignment="Top" Width="125" Height="26" Click="ButtonDeletePage_Click">
                         <Button.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="7"/>

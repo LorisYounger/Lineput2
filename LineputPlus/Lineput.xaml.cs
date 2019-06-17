@@ -20,9 +20,12 @@ namespace LineputPlus
     /// </summary>
     public partial class Lineputxaml : Window
     {
+
+        LPTPlayer LPTPY;
         /// <summary>
-        /// 什么内容都不带直接启动
+        /// 什么内容都不带直接启动//理论上不可能 仅用于调试
         /// </summary>
+        [Obsolete]
         public Lineputxaml()
         {
             this.WindowState = WindowState.Maximized;
@@ -32,10 +35,12 @@ namespace LineputPlus
         /// 带内容的启动
         /// </summary>
         /// <param name="lps">文档</param>
-        public Lineputxaml(LpsDocument lps)
+        public Lineputxaml(LPTPlayer lpt)
         {//ToDo:展示
-            this.WindowState = WindowState.Maximized;
             InitializeComponent();
+            this.WindowState = WindowState.Maximized;
+            LPTPY = lpt;
+
         }
         string ChooseColor = "White";
         private void ButtonColorChoose_Click(object sender, RoutedEventArgs e)
@@ -134,14 +139,13 @@ namespace LineputPlus
         private void ButtonSizeSmall_Click(object sender, RoutedEventArgs e)
         {
             double size;
-            if (TextBox1.Selection.GetPropertyValue(TextElement.FontSizeProperty).GetType()== typeof(Double))
+            if (TextBox1.Selection.GetPropertyValue(TextElement.FontSizeProperty).GetType() == typeof(Double))
             {
                 size = (double)TextBox1.Selection.GetPropertyValue(TextElement.FontSizeProperty);
             }
             else
             {
                 TextRange tmp = new TextRange(TextBox1.Selection.Start, TextBox1.Selection.Start.GetNextContextPosition(LogicalDirection.Backward));
-                MessageBox.Show(Convert.ToString(tmp.GetPropertyValue(TextElement.FontSizeProperty)));
                 size = (double)tmp.GetPropertyValue(TextElement.FontSizeProperty); ;
             }
             TextBox1.Selection.ApplyPropertyValue(TextElement.FontSizeProperty, (size * 0.8).ToString("f1"));
@@ -157,7 +161,6 @@ namespace LineputPlus
             else
             {
                 TextRange tmp = new TextRange(TextBox1.Selection.Start, TextBox1.Selection.Start.GetNextContextPosition(LogicalDirection.Backward));
-                MessageBox.Show(Convert.ToString(tmp.GetPropertyValue(TextElement.FontSizeProperty)));
                 size = (double)tmp.GetPropertyValue(TextElement.FontSizeProperty); ;
             }
             TextBox1.Selection.ApplyPropertyValue(TextElement.FontSizeProperty, (size * 1.25).ToString("f1"));
