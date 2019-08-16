@@ -42,43 +42,19 @@ namespace LineputPlus
             LPTPY = lpt;
 
         }
-        string ChooseColor = "White";
         private void ButtonColorChoose_Click(object sender, RoutedEventArgs e)
-        {
-            ChooseColor = ((Button)sender).Name.Substring(6);
-            Color Choose = Colors.White;
-            switch (ChooseColor)
-            {
-                case "Red":
-                    Choose = Colors.Red;
-                    break;
-                case "Lime":
-                    Choose = Colors.Lime;
-                    break;
-                case "Blue":
-                    Choose = Colors.Blue;
-                    break;
-                case "Orange":
-                    Choose = Colors.Orange;
-                    break;
-                case "White":
-                    Choose = Colors.White;
-                    break;
-                case "Black":
-                    Choose = Colors.Black;
-                    break;
-            }
-            BorderDisplayColor.Background = new SolidColorBrush(Choose);
+        {            
+            BorderDisplayColor.Background = ((Button)sender).Background;
         }
 
         private void ButtonFontColor_Click(object sender, RoutedEventArgs e)
         {
-            TextBox1.Selection.ApplyPropertyValue(TextElement.ForegroundProperty, ChooseColor);
+            TextBox1.Selection.ApplyPropertyValue(TextElement.ForegroundProperty, BorderDisplayColor.Background);
         }
 
         private void ButtonBackColor_Click(object sender, RoutedEventArgs e)
         {
-            TextBox1.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, ChooseColor);
+            TextBox1.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, BorderDisplayColor.Background);
         }
 
         private void ButtonB_Click(object sender, RoutedEventArgs e)

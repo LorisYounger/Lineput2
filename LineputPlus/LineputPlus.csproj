@@ -79,10 +79,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Class.cs" />
+    <Compile Include="Class\Main.cs" />
+    <Compile Include="Class\LineDisplay.cs" />
     <Compile Include="Lineput.xaml.cs">
       <DependentUpon>Lineput.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Class\LptDocument.cs" />
+    <Compile Include="Class\LPTPlayer.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -200,6 +203,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ic_extension_black_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ic_format_clear_black_24dp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

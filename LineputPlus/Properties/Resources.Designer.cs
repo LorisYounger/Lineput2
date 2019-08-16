@@ -173,6 +173,16 @@ namespace LineputPlus.Properties {
         /// <summary>
         ///   查找 System.Drawing.Bitmap 类型的本地化资源。
         /// </summary>
+        internal static System.Drawing.Bitmap ic_format_clear_black_24dp {
+            get {
+                object obj = ResourceManager.GetObject("ic_format_clear_black_24dp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
         internal static System.Drawing.Bitmap ic_format_color_fill_black_24dp {
             get {
                 object obj = ResourceManager.GetObject("ic_format_color_fill_black_24dp", resourceCulture);

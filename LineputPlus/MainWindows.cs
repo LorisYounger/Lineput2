@@ -14,6 +14,7 @@ using Color = System.Windows.Media.Color;
 using FontFamily = System.Windows.Media.FontFamily;
 using System.Text;
 
+
 namespace LineputPlus
 {
     /// <summary>
@@ -51,7 +52,7 @@ namespace LineputPlus
 
             if (args == null)
             {
-                OpenLPT("LPT#Origin:|ver#2:|Author#UserName:|\nh3:|欢迎使用Lineput");
+                OpenNew();
             }
             else
             {
@@ -148,7 +149,7 @@ namespace LineputPlus
             filepath = "";
             FileName = "新文件";
             Title = "Lineput - 新文件";
-            OpenLPT("LPT#Origin:|ver#2:|Author#UserName:|\nh3:|欢迎使用Lineput");
+            OpenLPT("LPT#Origin:|ver#2:|Author#UserName:|\nh3:|欢迎使用Lineput\nlinedisplay:|/npower by LB");
             MarkLeftPanelColor();
         }
 
@@ -340,10 +341,11 @@ namespace LineputPlus
                 Document.Document.Foreground = new SolidColorBrush(OADisplay.FontColor);
                 Document.Document.Background = new SolidColorBrush(OADisplay.BackColor);
 
-
+                //用于判断下一行要不要用run 主要方法是判断行末是否有\n
+                bool NextUseRun = false;
                 foreach (Line lin in EachPage[Page])
                 {
-                    DisplayLine(lin, Document.Document, IADisplay);
+                    DisplayLine(lin, Document.Document, IADisplay,ref NextUseRun);
                 }
                 //清空Undo
                 Document.IsUndoEnabled = false;

@@ -12,6 +12,7 @@ using RichTextBox = System.Windows.Controls.RichTextBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using MessageBox = System.Windows.MessageBox;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
+using System.Windows.Documents;
 
 namespace LineputPlus
 {
@@ -31,7 +32,7 @@ namespace LineputPlus
                 if (savefile.ShowDialog() == true)
                 {
                     FilePath = savefile.FileName;
-                    Save(savefile.FileName);                    
+                    Save(savefile.FileName);
                 }
                 else
                     return false;
@@ -81,7 +82,7 @@ namespace LineputPlus
             LPTED.DisplaySource(NowPage);
         }
         bool AutoCloseToolBar = false;
-        private void TabControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void AutoCloseToolBarClick()
         {
             AutoCloseToolBar = !AutoCloseToolBar;
             if (AutoCloseToolBar)
@@ -90,15 +91,9 @@ namespace LineputPlus
                 ToolBar.Background = new SolidColorBrush(Colors.SkyBlue);
             ToolBarHeight.Height = new GridLength(110, GridUnitType.Pixel);
         }
-
-        private void ConsoleBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void TabControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            AutoCloseToolBar = !AutoCloseToolBar;
-            if (AutoCloseToolBar)
-                ToolBar.Background = new SolidColorBrush(Colors.YellowGreen);
-            else
-                ToolBar.Background = new SolidColorBrush(Colors.SkyBlue);
-            ToolBarHeight.Height = new GridLength(110, GridUnitType.Pixel);
+            AutoCloseToolBarClick();
         }
 
         private void ToolBar_MouseLeave(object sender, MouseEventArgs e)
@@ -148,6 +143,7 @@ namespace LineputPlus
             }
             //储存自定义颜色
             CustomColors = cd.CustomColors;
+            cd.Dispose();
         }
         private void ButtonOAFontColor_Click(object sender, RoutedEventArgs e)
         {
@@ -167,6 +163,7 @@ namespace LineputPlus
             }
             //储存自定义颜色
             CustomColors = cd.CustomColors;
+            cd.Dispose();
         }
         private void ButtonOAFontFamily_Click(object sender, RoutedEventArgs e)
         {
@@ -176,30 +173,31 @@ namespace LineputPlus
             {
                 LPTED.SavePage(NowPage);//先保存
 
-                LPTED.OADisplay.FontFamily = new FontFamily(fd.Font.FontFamily.ToString());//储存设置
+                LPTED.OADisplay.FontFamily = new FontFamily(fd.Font.FontFamily.Name);//储存设置
                 LPTED.OADisplay.FontSize = fd.Font.Size;
 
-                ButtonOAFontFamily.Content = "字体:" + fd.Font.FontFamily.ToString();
+                ButtonOAFontFamily.Content = "字体:" + fd.Font.FontFamily.Name;
                 LPTED.DisplaySource(NowPage);//重新加载
             }
+            fd.Dispose();
         }
 
         private void ComboBoxOAFontSize_LostFocus(object sender, RoutedEventArgs e)
         {
-            ChangeFontSize();
+            ChangeOAFontSize();
         }
 
         private void ComboBoxOAFontSize_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
-                ChangeFontSize();
+                ChangeOAFontSize();
         }
 
         private void ComboBoxOAFontSize_DropDownClosed(object sender, EventArgs e)
         {
-            ChangeFontSize();
+            ChangeOAFontSize();
         }
-        private void ChangeFontSize()
+        private void ChangeOAFontSize()
         {
             if (!float.TryParse(ComboBoxOAFontSize.Text, out float fsize))
             {
@@ -223,7 +221,7 @@ namespace LineputPlus
         {
             Save();
         }
-        
+
         private void ButtonSaveAS_Click(object sender, RoutedEventArgs e)
         {
             Save(true);
@@ -243,7 +241,7 @@ namespace LineputPlus
                     case MessageBoxResult.Cancel:
                         e.Cancel = true;
                         break;
-                 }
+                }
             }
         }
 
@@ -276,7 +274,7 @@ namespace LineputPlus
             LPTED.SavePage(NowPage);
             NowPage++;
 
-            LPTED.EachPage.Insert(NowPage,new LinePutScript.LpsDocument());
+            LPTED.EachPage.Insert(NowPage, new LinePutScript.LpsDocument());
             RefreshLeftPanelAll();
             MarkLeftPanelColor();
             TextBox1.Document.Blocks.Clear();
@@ -298,12 +296,12 @@ namespace LineputPlus
         {
             if (LPTED.EachPage.Count == 1)
             {
-                MessageBox.Show("最后一页面无法删除","删除失败");
+                MessageBox.Show("最后一页面无法删除", "删除失败");
                 return;
             }
-            if (MessageBox.Show("确认删除该页面吗,此操作无法撤回","删除本页面",MessageBoxButton.YesNo)== MessageBoxResult.Yes)
+            if (MessageBox.Show("确认删除该页面吗,此操作无法撤回", "删除本页面", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                
+
                 IsChange = true;
                 LPTED.EachPage.RemoveAt(NowPage);
                 if (NowPage >= LPTED.EachPage.Count)
@@ -312,6 +310,224 @@ namespace LineputPlus
                 MarkLeftPanelColor();
                 LPTED.DisplaySource(NowPage);
             }
+        }
+
+        private void ButtonFontFamily_Click(object sender, RoutedEventArgs e)
+        {
+            if (TextBox1.Selection.IsEmpty)
+                return;
+            FontDialog fd = new FontDialog();
+            if (float.TryParse(ComboBoxFontSize.Text, out float res))
+                fd.Font = new Font(((string)ButtonFontFamily.Content).Substring(3), res);
+            else
+                fd.Font = new Font(((string)ButtonFontFamily.Content).Substring(3), LPTED.OADisplay.FontSize);
+            if (fd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                TextBox1.Selection.ApplyPropertyValue(TextElement.FontFamilyProperty, fd.Font.FontFamily.Name);
+                TextBox1.Selection.ApplyPropertyValue(TextElement.FontSizeProperty, fd.Font.Size.ToString("f1"));
+
+                ButtonFontFamily.Content = "字体:" + fd.Font.FontFamily.Name;
+                ComboBoxFontSize.Text = fd.Font.Size.ToString("f1");
+            }
+            fd.Dispose();
+        }
+
+
+        //每次选定的时候更新编辑页面的功能
+
+        private void TextBox1_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            TextRange tmp = new TextRange(TextBox1.Selection.Start, TextBox1.Selection.Start.GetNextContextPosition(LogicalDirection.Backward));
+            ComboBoxFontSize.Text = tmp.GetPropertyValue(TextElement.FontSizeProperty).ToString();
+            ButtonFontFamily.Content = "字体:" + tmp.GetPropertyValue(TextElement.FontFamilyProperty).ToString();
+        }
+
+
+        private void ComboBoxFontSize_DropDownClosed(object sender, EventArgs e)
+        {
+            ChangeFontSize();
+        }
+
+        private void ComboBoxFontSize_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ChangeFontSize();
+        }
+
+        private void ComboBoxFontSize_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            ChangeFontSize();
+        }
+
+        private void ChangeFontSize()
+        {
+            if (!float.TryParse(ComboBoxFontSize.Text, out float fsize))
+            {
+                return;
+            }
+            TextBox1.Selection.ApplyPropertyValue(TextElement.FontSizeProperty, fsize.ToString("f1"));
+        }
+
+        private void ButtonBold_Click(object sender, RoutedEventArgs e)
+        {
+            if (TextBox1.Selection.GetPropertyValue(TextElement.FontWeightProperty).ToString() != "Bold")
+            {
+                TextBox1.Selection.ApplyPropertyValue(TextElement.FontWeightProperty, "Bold");
+            }
+            else
+                TextBox1.Selection.ApplyPropertyValue(TextElement.FontWeightProperty, "Normal");
+        }
+
+        private void ButtonItalic_Click(object sender, RoutedEventArgs e)
+        {
+            if (TextBox1.Selection.GetPropertyValue(TextElement.FontStyleProperty).ToString() != "Italic")
+            {
+                TextBox1.Selection.ApplyPropertyValue(TextElement.FontStyleProperty, "Italic");
+            }
+            else
+                TextBox1.Selection.ApplyPropertyValue(TextElement.FontStyleProperty, "Normal");
+        }
+
+        private void ButtonUnderline_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (((TextDecorationCollection)TextBox1.Selection.GetPropertyValue(Inline.TextDecorationsProperty)).Count == 0 ||
+                    ((TextDecorationCollection)TextBox1.Selection.GetPropertyValue(Inline.TextDecorationsProperty))[0].Location != TextDecorationLocation.Underline)
+                {
+                    TextBox1.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, "Underline");
+                }
+                else
+                    TextBox1.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, null);
+            }
+            catch
+            {
+                TextBox1.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, "Underline");
+            }
+        }
+
+        private void ButtonStrikethrough_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (((TextDecorationCollection)TextBox1.Selection.GetPropertyValue(Inline.TextDecorationsProperty)).Count == 0 ||
+                    ((TextDecorationCollection)TextBox1.Selection.GetPropertyValue(Inline.TextDecorationsProperty))[0].Location != TextDecorationLocation.Strikethrough)
+                {
+                    TextBox1.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, "Strikethrough");
+                }
+                else
+                    TextBox1.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, null);
+            }
+            catch
+            {
+                TextBox1.Selection.ApplyPropertyValue(Inline.TextDecorationsProperty, "Strikethrough");
+            }
+        }
+        public void ChangeAlignment(TextAlignment TA)
+        {
+            var tp = TextBox1.Selection.Start;
+            foreach (Block block in TextBox1.Document.Blocks)
+            {
+                if (block.ElementStart.CompareTo(tp) == -1 && block.ElementEnd.CompareTo(tp) == 1)
+                {
+                    block.TextAlignment = TA;
+                    return;
+                }
+            }
+        }
+
+        private void ButtonAjustify_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeAlignment(TextAlignment.Justify);
+        }
+
+        private void ButtonAcenter_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeAlignment(TextAlignment.Center);
+        }
+
+        private void ButtonAleft_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeAlignment(TextAlignment.Left);
+        }
+
+        private void ButtonAright_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeAlignment(TextAlignment.Right);
+        }
+
+        private void ButtonClearFormat_Click(object sender, RoutedEventArgs e)
+        {
+            TextBox1.Selection.ClearAllProperties();
+        }
+
+        private void ButtonSizebig_Click(object sender, RoutedEventArgs e)
+        {
+            double size;
+            if (TextBox1.Selection.GetPropertyValue(TextElement.FontSizeProperty).GetType() == typeof(Double))
+            {
+                size = (double)TextBox1.Selection.GetPropertyValue(TextElement.FontSizeProperty);
+            }
+            else
+            {
+                TextRange tmp = new TextRange(TextBox1.Selection.Start, TextBox1.Selection.Start.GetNextContextPosition(LogicalDirection.Backward));
+                size = (double)tmp.GetPropertyValue(TextElement.FontSizeProperty); ;
+            }
+            TextBox1.Selection.ApplyPropertyValue(TextElement.FontSizeProperty, (size * 1.25).ToString("f1"));
+        }
+
+        private void ButtonSizesmall_Click(object sender, RoutedEventArgs e)
+        {
+            double size;
+            if (TextBox1.Selection.GetPropertyValue(TextElement.FontSizeProperty).GetType() == typeof(Double))
+            {
+                size = (double)TextBox1.Selection.GetPropertyValue(TextElement.FontSizeProperty);
+            }
+            else
+            {
+                TextRange tmp = new TextRange(TextBox1.Selection.Start, TextBox1.Selection.Start.GetNextContextPosition(LogicalDirection.Backward));
+                size = (double)tmp.GetPropertyValue(TextElement.FontSizeProperty); ;
+            }
+            TextBox1.Selection.ApplyPropertyValue(TextElement.FontSizeProperty, (size * 0.8).ToString("f1"));
+        }
+
+        private void ButtonFontColor_Click(object sender, RoutedEventArgs e)
+        {
+            TextBox1.Selection.ApplyPropertyValue(TextElement.ForegroundProperty, ButtonCGFontColor.Background);
+        }
+
+        private void ButtonBackColor_Click(object sender, RoutedEventArgs e)
+        {
+            TextBox1.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, ButtonCGBackColor.Background);
+        }
+
+        private void ButtonCGFontColor_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonCGFontColor.IsChecked = false;
+            ColorDialog cd = new ColorDialog();
+            cd.CustomColors = CustomColors;
+            cd.Color = ColorConvent(((SolidColorBrush)ButtonCGFontColor.Background).Color);
+            if (cd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                ButtonCGFontColor.Background = new SolidColorBrush(ColorConvent(cd.Color));
+            }
+            //储存自定义颜色
+            CustomColors = cd.CustomColors;
+            cd.Dispose();
+        }
+
+        private void ButtonCGBackColor_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonCGBackColor.IsChecked = false;
+            ColorDialog cd = new ColorDialog();
+            cd.CustomColors = CustomColors;
+            cd.Color = ColorConvent(((SolidColorBrush)ButtonCGBackColor.Background).Color);
+            if (cd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                ButtonCGBackColor.Background = new SolidColorBrush(ColorConvent(cd.Color));
+            }
+            //储存自定义颜色
+            CustomColors = cd.CustomColors;
+            cd.Dispose();
         }
 
         //Todo:IA的应用于更改(在切换栏
