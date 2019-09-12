@@ -53,10 +53,10 @@
                 <Button x:Name="ButtonT" Width="24" Background="Snow" Click="ButtonT_Click">
                     <Image Source="Resources/ic_format_strikethrough_black_24dp.png" />
                 </Button>
-                <Button x:Name="ButtonBack" Width="24" Background="Snow">
+                <Button x:Name="ButtonBack" Width="24" Background="Snow" Click="ButtonBack_Click">
                     <Image Source="Resources/ic_replay_black_24dp.png" />
                 </Button>
-                <Button x:Name="ButtonNext" Width="24" Background="Snow">
+                <Button x:Name="ButtonNext" Width="24" Background="Snow" Click="ButtonNext_Click">
                     <Image Source="Resources/ic_play_arrow_black_24dp.png" />
                 </Button>
                 <Button x:Name="ButtonNextCls" Width="24" Background="Snow">

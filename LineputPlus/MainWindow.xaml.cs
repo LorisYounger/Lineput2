@@ -120,7 +120,12 @@ namespace LineputPlus
 
         private void ButtonStart_Click(object sender, RoutedEventArgs e)
         {
-            Lineputxaml lineputxaml = new Lineputxaml();
+            //先保存当前正在编辑的文档
+            LPTED.SavePage(NowPage);
+            //将page内容储存到lpt
+            LPTED.Save();
+            
+            Lineputxaml lineputxaml = new Lineputxaml(LPTED.ToString());
             this.Hide();
             lineputxaml.ShowDialog();
             this.Show();
@@ -337,6 +342,8 @@ namespace LineputPlus
 
         private void TextBox1_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            if (TextBox1.Selection.IsEmpty)
+                return;
             TextRange tmp = new TextRange(TextBox1.Selection.Start, TextBox1.Selection.Start.GetNextContextPosition(LogicalDirection.Backward));
             ComboBoxFontSize.Text = tmp.GetPropertyValue(TextElement.FontSizeProperty).ToString();
             ButtonFontFamily.Content = "字体:" + tmp.GetPropertyValue(TextElement.FontFamilyProperty).ToString();

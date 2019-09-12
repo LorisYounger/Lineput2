@@ -1,17 +1,8 @@
-﻿using LinePutScript;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace LineputPlus
 {
@@ -20,8 +11,7 @@ namespace LineputPlus
     /// </summary>
     public partial class Lineputxaml : Window
     {
-
-        LPTPlayer LPTPY;
+        readonly LPTPlayer LPTPY;
         /// <summary>
         /// 什么内容都不带直接启动//理论上不可能 仅用于调试
         /// </summary>
@@ -35,15 +25,23 @@ namespace LineputPlus
         /// 带内容的启动
         /// </summary>
         /// <param name="lps">文档</param>
-        public Lineputxaml(LPTPlayer lpt)
+        public Lineputxaml(string LPT, int start = 1)
         {//ToDo:展示
             InitializeComponent();
             this.WindowState = WindowState.Maximized;
-            LPTPY = lpt;
+            LPTPY = new LPTPlayer(TextBox1, LPT, start);
 
+            TextBox1.Document.Blocks.Clear();
+
+            TextBox1.Background = new SolidColorBrush(LPTPY.OADisplay.BackColor);
+
+            TextBox1.Document.Foreground = new SolidColorBrush(LPTPY.OADisplay.FontColor);
+            TextBox1.Document.Background = new SolidColorBrush(LPTPY.OADisplay.BackColor);
+
+            LPTPY.Next();
         }
         private void ButtonColorChoose_Click(object sender, RoutedEventArgs e)
-        {            
+        {
             BorderDisplayColor.Background = ((Button)sender).Background;
         }
 
@@ -140,6 +138,16 @@ namespace LineputPlus
                 size = (double)tmp.GetPropertyValue(TextElement.FontSizeProperty); ;
             }
             TextBox1.Selection.ApplyPropertyValue(TextElement.FontSizeProperty, (size * 1.25).ToString("f1"));
+        }
+
+        private void ButtonNext_Click(object sender, RoutedEventArgs e)
+        {
+            LPTPY.Next();
+        }
+
+        private void ButtonBack_Click(object sender, RoutedEventArgs e)
+        {
+            LPTPY.Back();
         }
     }
 }

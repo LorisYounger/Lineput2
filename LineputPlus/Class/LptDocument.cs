@@ -406,18 +406,18 @@ namespace LineputPlus
             Reptex = Reptex.Replace("/com", ",");
             return Reptex;
         }
-        //Todo:完全弃用这个方法?转移到Player? 或从Player转移到这个
-        /// <summary>
-        /// 显示当前阅读行的//包括替换(演讲用)
-        /// </summary>
-        /// <param name="line">哪一行的内容是</param>
-        /// <param name="fd">要被显示的文档</param>
-        /// <param name="IAld">半全局变量 会随时更改</param>
-        /// <param name="dc">播放控制</param>
-        public void DisplayLine(Line line, FlowDocument fd, LineDisplay IAld, DisplayControl dc)//Todo:使用委托在Player实现特殊替换的等功能 这样player就不用担心
-        {
-            //ToDo
-        }
+        ////Todo:完全弃用这个方法?转移到Player? 或从Player转移到这个
+        ///// <summary>
+        ///// 显示当前阅读行的//包括替换(演讲用)
+        ///// </summary>
+        ///// <param name="line">哪一行的内容是</param>
+        ///// <param name="fd">要被显示的文档</param>
+        ///// <param name="IAld">半全局变量 会随时更改</param>
+        ///// <param name="dc">播放控制</param>
+        //public void DisplayLine(Line line, FlowDocument fd, LineDisplay IAld, DisplayControl dc)//Todo:使用委托在Player实现特殊替换的等功能 这样player就不用担心
+        //{
+        //    //ToDo
+        //}
 
         /// <summary>
         /// 控制显示委托 可用于插件,实现特殊功能等
