@@ -520,6 +520,7 @@ namespace LineputPlus
             //储存自定义颜色
             CustomColors = cd.CustomColors;
             cd.Dispose();
+            TextBox1.Selection.ApplyPropertyValue(TextElement.ForegroundProperty, ButtonCGFontColor.Background);
         }
 
         private void ButtonCGBackColor_Click(object sender, RoutedEventArgs e)
@@ -535,6 +536,7 @@ namespace LineputPlus
             //储存自定义颜色
             CustomColors = cd.CustomColors;
             cd.Dispose();
+            TextBox1.Selection.ApplyPropertyValue(TextElement.BackgroundProperty, ButtonCGBackColor.Background);
         }
 
         //Todo:IA的应用于更改(在切换栏

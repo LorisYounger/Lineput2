@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using static LineputPlus.Main;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace LineputPlus
 {
@@ -29,11 +30,13 @@ namespace LineputPlus
         /// 文本置换
         /// </summary>
         /// <param name="Reptex">原文本</param>
-        public void TextDeReplace(ref string Reptex)
+        public string TextDeReplace(string Reptex)
         {
             Reptex = Reptex.Replace("/now", DateTime.Now.ToString());
             Reptex = Reptex.Replace("/date", DateTime.Now.ToShortDateString());
             Reptex = Reptex.Replace("/time", DateTime.Now.ToShortTimeString());
+            Reptex = Sub.TextDeReplace(Reptex);
+            return Reptex;
         }
         ///// <summary>
         ///// 控制显示委托 可用于插件,实现特殊功能等
@@ -69,17 +72,17 @@ namespace LineputPlus
         }
         public void Next()
         {
-            if (!ReadCanNext())//如果没有下一句，则直接退出
+            if (!ReadCanNext() && MSs.Count < NowSaveID)//如果没有下一句，则直接退出
             {
+                return;
+            }
+            if (MSs.Count > NowSaveID + 1)//如果有存档 先加载存档
+            {
+                TextRange TS = new TextRange(Document.Document.ContentStart, Document.Document.ContentEnd);
+                TS.Load(MSs[NowSaveID + 1], DataFormats.Xaml);
                 return;
             }
             Save();
-            if (MSs.Count > NowSaveID)//如果有存档 先加载存档
-            {
-                TextRange TS = new TextRange(Document.Document.ContentStart, Document.Document.ContentEnd);
-                TS.Load(MSs[NowSaveID], DataFormats.Xaml);
-                return;
-            }
             bool next = true;
             bool NextUseRun = false;
             Line line; LineDisplay disThis;
@@ -116,14 +119,17 @@ namespace LineputPlus
                             next = false;
                             break;
                         case "shell":
-
+                            Process.Start(sub.Info);
                             break;
                         case "goto":
+                            this.LineNode = sub.InfoToInt;
+                            break;
                         case "img":
                         case "open":
                         case "mov":
+                            break;//todo
                         case "msg":
-                            //TODO
+                            MessageBox.Show(sub.Info);
                             break;
 
                         case "font":
@@ -280,7 +286,7 @@ namespace LineputPlus
                     }
                 }
 
-                disThis.OutPut += TextDeReplaceMD(line.text);//注:这个是用魔改/stop还是/stop 之所以这么用是因为这个是编辑用不是展示用
+                disThis.OutPut += TextDeReplace(line.text);
 
                 bool nextnextuserun = !disThis.OutPut.EndsWith("\n");
                 if (!nextnextuserun)
@@ -301,7 +307,7 @@ namespace LineputPlus
             TextRange TS = new TextRange(Document.Document.ContentStart, Document.Document.ContentEnd);
             MemoryStream ms = new MemoryStream();
             TS.Save(ms, DataFormats.Xaml);
-            if (NowSaveID > MSs.Count)
+            if (NowSaveID >= MSs.Count)
             {
                 MSs.Add(ms);
             }

@@ -66,6 +66,11 @@
         </Viewbox>
         <Viewbox Grid.Column="1">
             <RichTextBox x:Name="TextBox1" Background="#FF444444" Foreground="White" Width="600" Height="400" >
+                <RichTextBox.Resources>
+                    <Style TargetType="{x:Type Paragraph}">
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </RichTextBox.Resources>
                 <FlowDocument>
                     <Paragraph>
                         <Run Text="欢迎使用Lineput 当前版本"/>

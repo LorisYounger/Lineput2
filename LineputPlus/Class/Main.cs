@@ -58,6 +58,8 @@ namespace LineputPlus
             }
             get
             {
+                if (Properties.Settings.Default.CustomColors == "")
+                    return new int[0];
                 string[] vs = Properties.Settings.Default.CustomColors.Split('|');
                 int[] vi = new int[vs.Length];
                 for (int i = 0; i < vs.Length; i++)
